@@ -4,6 +4,7 @@ import pytz
 import discord
 from discord.ext import commands
 
+
 class Automod(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -14,42 +15,47 @@ class Automod(commands.Cog):
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
-
     @commands.Cog.listener()
     async def on_message(self, message):
         def check(m):
             return (m.author == message.author
-					and len(m.content)
-                    and (datetime.utcnow()-m.created_at).seconds < 5)
+                    and len(m.content)
+                    and (datetime.utcnow() - m.created_at).seconds < 5)
 
         if len(message.content) > 1500:
-            if message.author.guild_permissions.manage_messages == True:
+            if message.author.guild_permissions.manage_messages:
                 return
             await message.delete()
-            await message.channel.send(f"{message.author.mention} You Are Not Allowed to Send Long Messages!\n\nRepeating this will Cause in a Mute.")
-    
-        bad_words = ["fuck", "bitch", "gae","G A Y","gae","madharbhakt","nigger", "nigga", "gay", "b#tch", "fuker", "Laude", "nude", "sex", "chutiye", "madarchod", "bhienchod", "madar bhakt","GAY", "gAy", "gaY","GAy"]
+            await message.channel.send(
+                f"{message.author.mention} You Are Not Allowed to Send Long Messages!\n\nRepeating this will Cause in a Mute.")
+
+        bad_words = ["fuck", "bitch", "gae", "G A Y", "gae", "madharbhakt", "nigger", "nigga", "gay", "b#tch", "fuker",
+                     "Laude", "nude", "sex", "chutiye", "madarchod", "bhienchod", "madar bhakt", "GAY", "gAy", "gaY",
+                     "GAy"]
 
         for words in bad_words:
             if words in message.content.lower():
-                if message.author.guild_permissions.manage_messages == True:
+                if message.author.guild_permissions.manage_messages:
                     await message.channe.send(f"{message.author.mention} Ik you are staff pls mind ur language")
                     return
                 await message.delete()
-                await message.channel.send(f"{message.author.mention} No bad words Allowed Here.\n\nRepeating this will Cause in a Mute.")#,delete_after = 10) 
+                await message.channel.send(
+                    f"{message.author.mention} No bad words Allowed Here.\n\nRepeating this will Cause in a Mute.")  # ,delete_after = 10)
 
         if "discord.gg/" in message.content.lower():
-            if message.author.guild_permissions.manage_messages == True:
+            if message.author.guild_permissions.manage_messages:
                 return
             await message.delete()
-            await message.channel.send(f"{message.author.mention} No invite Links allowed!\n\nRepeating this will Cause in a Mute.")
-
+            await message.channel.send(
+                f"{message.author.mention} No invite Links allowed!\n\nRepeating this will Cause in a Mute.")
 
         if len(list(filter(lambda message: check(message), self.client.cached_messages))) >= 5:
-            if message.author.guild_permissions.manage_roles == True:
-                await message.channel.send(f"{message.author.mention} AY sir, ik you are **staff that does not means you can spam** !!")
+            if message.author.guild_permissions.manage_roles:
+                await message.channel.send(
+                    f"{message.author.mention} AY sir, ik you are **staff that does not means you can spam** !!")
                 return
-            await message.channel.send(f"{message.author.mention} Don't spam Messages! You Have Been Muted in Server for 5m")
+            await message.channel.send(
+                f"{message.author.mention} Don't spam Messages! You Have Been Muted in Server for 5m")
             role = discord.utils.get(message.guild.roles, name="Muted")
             await message.author.add_roles(role)
             log_channel = self.client.get_channel(863000643303374920)
@@ -58,6 +64,7 @@ class Automod(commands.Cog):
             await message.author.remove_roles(role)
 
         await self.client.process_commands(message)
+
 
 def setup(client):
     client.add_cog(Automod(client))
