@@ -5,6 +5,7 @@ from discord.ext import commands
 from datetime import datetime
 import pytz
 
+
 class Invites(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -39,7 +40,7 @@ class Invites(commands.Cog):
     async def on_member_join(self, member):
         inviter = await self.tracker.fetch_inviter(member)  # inviter is the member who invited
          
-        if inviter == None:
+        if inviter is None:
             inviter.name = "Inviter Not Found"
             inviter.discriminator = " Link deleted " 
         
@@ -51,9 +52,9 @@ class Invites(commands.Cog):
             color = 0x14a00f,
             timestamp=datetime.now(self.IST)
         )
-        embed.set_thumbnail(url=member.avatar_url)
-        embed.set_author(name=member.name, icon_url=member.avatar_url)
-        embed.set_footer(text=member.guild.name, icon_url=member.guild.icon_url)
+        embed.set_thumbnail(url=member.avatar.url)
+        embed.set_author(name=member.name, icon_url=member.avatar.url)
+        embed.set_footer(text=member.guild.name, icon_url=member.guild.icon.url)
 
         await member.send(f"Hi {member.mention} Welcome to our FRNz Official community.\n<a:Heart:815506676533690390>You can promote your channel, videos  or blog in <#800291409726144513>\n<a:Heart:815506676533690390>Remember to Read Rules in <#799978440492449842>\n<a:Heart:815506676533690390>Take Self roles in <#799978698064265226>\n\n<a:Heart:815506676533690390>Have a great time here in {guild.name}.")
         await asyncio.sleep(1)
@@ -87,9 +88,9 @@ class Invites(commands.Cog):
             color=0xE74C3C,
             timestamp=datetime.now(self.IST)          
         )
-        embed.set_thumbnail(url=member.avatar_url)
-        embed.set_author(name=member.name, icon_url=member.avatar_url)
-        embed.set_footer(text=member.guild.name, icon_url=member.guild.icon_url)
+        embed.set_thumbnail(url=member.avatar.url)
+        embed.set_author(name=member.name, icon_url=member.avatar.url)
+        embed.set_footer(text=member.guild.name, icon_url=member.guild.icon.url)
         await channel.send(embed=embed)
 
 

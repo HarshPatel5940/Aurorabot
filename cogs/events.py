@@ -105,14 +105,14 @@ class Events(commands.Cog):
             log_channel = self.client.get_channel(863000479889096724)
             await log_channel.send(embed=embed)
 
-        if before.avatar_url != after.avatar_url:
+        if before.avatar.url != after.avatar.url:
             embed = discord.Embed(title=f"Avatar change",
                                   description="New image is below, old to the thumbnail.",
                                   colour=after.colour,
                                   timestamp=datetime.now(self.IST))
             embed.add_field(name="Member Id :", value=f"{before.id}")
-            embed.set_thumbnail(url=before.avatar_url)
-            embed.set_image(url=after.avatar_url)
+            embed.set_thumbnail(url=before.avatar.url)
+            embed.set_image(url=after.avatar.url)
             log_channel = self.client.get_channel(863000479889096724)
             await log_channel.send(embed=embed)
 
