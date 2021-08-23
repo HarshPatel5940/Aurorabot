@@ -54,7 +54,6 @@ class Giveaway(commands.Cog):
         """
         This Command is Used to create a Giveaway in the server!
         """
-        await ctx.message.delete()
         await ctx.send("Lets start this giveaway, answer the questions I ask and we shall proceed.")
         questionList = [
             ["What channel should it be in?", "Mention the channel"],

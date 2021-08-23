@@ -49,7 +49,7 @@ class Invites(commands.Cog):
         embed = discord.Embed(
             title=f"Welcome To FRNz Official Server.",
             description=f"**Member :** {member.mention}\n **Invited by: {inviter.name}#{inviter.discriminator}**",
-            color = 0x14a00f,
+            color=0x14a00f,
             timestamp=datetime.now(self.IST)
         )
         embed.set_thumbnail(url=member.avatar.url)
@@ -60,30 +60,13 @@ class Invites(commands.Cog):
         await asyncio.sleep(1)
         await channel.send(embed=embed)
 
-    """
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
-
-        channel = self.client.get_channel(781543831094165504)
-
-        embed = discord.Embed(
-            title = "A New Member Just Joined !",
-            description=f"{member.mention} Welcome To The Server ! \nEnjoy Your Stay Here",
-            color=0x14a00f,
-            timestamp=datetime.now(self.IST)          
-        )
-        embed.set_thumbnail(url=member.avatar_url)
-        embed.set_author(name=member.name, icon_url=member.avatar_url)
-        embed.set_footer(text=member.guild.name, icon_url=member.guild.icon_url)
-        await channel.send(embed=embed)
-    """
     @commands.Cog.listener()
     async def on_member_remove(self, member):
 
         channel = self.client.get_channel(799978817459453963)
 
         embed = discord.Embed(
-            title = "A Member Just Left :( ",
+            title="A Member Just Left :( ",
             description="Goodbye from all of us..",
             color=0xE74C3C,
             timestamp=datetime.now(self.IST)          

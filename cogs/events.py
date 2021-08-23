@@ -59,23 +59,15 @@ class Events(commands.Cog):
         elif message.content.lower() == "hi":
             await message.channel.send(f"Hey {message.author.mention} Wat's Up?")
 
-        elif message.content.lower() == "hmm":
-            await message.channel.send("I Wonder why he is Hmming")
-
     @commands.Cog.listener()
-    async def on_command_error(self, message, error):
-        ignored = (commands.CommandNotFound, commands.UserInputError)
-        if isinstance(error, ignored):
+    async def on_command_error(self, message, exception):
+        if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner):
             return
-
-        if isinstance(error, commands.CheckFailure):
-            await message.channel.send(f"Hey! {message.author.mention} you lack on permisions")
+        if isinstance(exception, commands.CheckFailure):
+            await message.reply(f"Hey! {message.author.mention} you lack on permissions")
             return
-
-        if isinstance(error, commands.CommandOnCooldown):
-            msg = "**Command is still in Cooldown**, pls try again in {:.2f}s".format(error.retry_after)
-            await message.channel.send(msg)
-            return
+        await message.reply(
+            f"{exception}\nCorrect Usage: ```\n{message.prefix}{message.command.qualified_name} {message.command.signature}\n```")
 
     @commands.Cog.listener()
     async def on_user_update(self, before, after):

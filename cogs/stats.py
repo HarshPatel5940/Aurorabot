@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import platform
 
+
 class Stats(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -55,11 +56,10 @@ class Stats(commands.Cog):
         embed.set_thumbnail(url=emoji.url)
         await ctx.send(embed=embed)
 
-
     @commands.Cog.listener()
     async def on_message(self,message):
         if message.content.lower() == "aurora botinfo":
-            
+
             pythonVersion = platform.python_version()
             dpyVersion = discord.__version__
             serverCount = len(self.client.guilds)
@@ -80,8 +80,8 @@ class Stats(commands.Cog):
             embed.add_field(name="Bot Made By:", value="<@448740493468106753>")
 
             embed.set_footer(text=f"FRNz Official Community | {self.client.user.name}")
-            embed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
-            embed.set_thumbnail(url=self.client.user.avatar_url)
+            embed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar.url)
+            embed.set_thumbnail(url=self.client.user.avatar.url)
             await message.channel.send(embed=embed)
 
     @commands.command()
@@ -120,6 +120,7 @@ class Stats(commands.Cog):
 
         await ctx.message.delete()
         await ctx.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(Stats(client))

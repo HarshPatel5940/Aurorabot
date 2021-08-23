@@ -40,7 +40,6 @@ class Automod(commands.Cog):
             await message.channel.send(
                 f"{message.author.mention} No invite Links allowed!\n\nRepeating this will Cause in a Mute.")
 
-        await self.client.process_commands(message)
 
 
 def setup(client):

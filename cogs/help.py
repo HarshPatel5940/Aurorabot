@@ -1,101 +1,68 @@
-# Requires pip install buttons
+from datetime import datetime
+
+import discord
 from discord.ext import commands
 
-from utils.util import Pag
 
-class Help(commands.Cog, name="Help command"):
-    def __init__(self, client):
-        self.client = client
-        self.cmds_per_page = 5
+class BotInfo(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.bot.help_command.cog = self
 
-    def get_command_signature(self, command: commands.Command, ctx: commands.Context):
-        aliases = "|".join(command.aliases)
-        cmd_invoke = f"[{command.name}|{aliases}]" if command.aliases else command.name
+    @commands.command(aliases=["pong"])
+    async def ping(self, ctx):
+        """
+        This command is used to calculate latency of bot.
+        """
 
-        full_invoke = command.qualified_name.replace(command.name, "")
-
-        signature = f"{ctx.prefix}{full_invoke}{cmd_invoke} {command.signature}"
-        return signature
-
-    async def return_filtered_commands(self, walkable, ctx):
-        filtered = []
-
-        for c in walkable.walk_commands():
-            try:
-                if c.hidden:
-                    continue
-
-                elif c.parent:
-                    continue
-
-                await c.can_run(ctx)
-                filtered.append(c)
-            except commands.CommandError:
-                continue
-
-        return self.return_sorted_commands(filtered)
-
-    def return_sorted_commands(self, commandList):
-        return sorted(commandList, key=lambda x: x.name)
-
-    async def setup_help_pag(self, ctx, entity=None, title=None):
-        entity = entity or self.client
-        title = title or self.client.description
-
-        pages = []
-
-        if isinstance(entity, commands.Command):
-            filtered_commands = (
-                list(set(entity.all_commands.values()))
-                if hasattr(entity, "all_commands")
-                else []
-            )
-            filtered_commands.insert(0, entity)
-
+        if self.bot.latency > 500:
+            await ctx.send(
+                f'Pong! :ping_pong: \nResponse TIme: {round(self.bot.latency * 1000)}ms \nThe ping is high')
         else:
-            filtered_commands = await self.return_filtered_commands(entity, ctx)
-
-        for i in range(0, len(filtered_commands), self.cmds_per_page):
-            next_commands = filtered_commands[i : i + self.cmds_per_page]
-            commands_entry = ""
-
-            for cmd in next_commands:
-                desc = cmd.short_doc or cmd.description
-                signature = self.get_command_signature(cmd, ctx)
-                subcommand = "Has subcommands" if hasattr(cmd, "all_commands") else ""
-
-                commands_entry += (
-                    f"• **__{cmd.name}__**\n```\n{signature}\n```\n{desc}\n"
-                    if isinstance(entity, commands.Command)
-                    else f"• **__{cmd.name}__**\n{desc}\n    {subcommand}\n"
-                )
-            pages.append(commands_entry)
-
-        await Pag(title=title, color=0x03f1f1, entries=pages, length=1).start(ctx)
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f"{self.__class__.__name__} cog has been loaded\n-----")
-
-    @commands.command(name="help", aliases=["h", "commands"], description="The Main help command!")
-    async def help_command(self, ctx, *, entity=None):
-        await ctx.message.delete()
-        if not entity:
-            await self.setup_help_pag(ctx)
-
-        else:
-            cog = self.client.get_cog(entity)
-            if cog:
-                await self.setup_help_pag(ctx, cog, f"{cog.qualified_name}'s commands")
-
-            else:
-                command = self.client.get_command(entity)
-                if command:
-                    await self.setup_help_pag(ctx, command, command.name)
-
-                else:
-                    await ctx.send("Entity not found.")
+            await ctx.send(
+                f"Pong! :ping_pong: \nResponse Time: {round(self.bot.latency * 1000)}ms \nPing is fine. I'm working normal.")
 
 
-def setup(client):
-    client.add_cog(Help(client))
+def setup(bot):
+    bot.add_cog(BotInfo(bot=bot))
+
+
+class HelpCommand(commands.DefaultHelpCommand):
+    def __init__(self):
+        super().__init__(command_attrs={"help": "Shows this message",
+                                        "aliases": ["commands"]})
+
+    async def send(self, **kwargs):
+        await self.get_destination().send(**kwargs)
+
+    async def send_bot_help(self, mapping):
+        embed = discord.Embed(title=f"{self.context.me.name} Help", description="", color=discord.Color.blurple(),
+                              timestamp=datetime.utcnow())
+        for cog, command in mapping.items():
+            filtered = await self.filter_commands(commands=command)
+            cog_name = getattr(cog, 'qualified_name', "No Category")
+            cog_desc = getattr(cog, 'description', "")
+            if cog_name not in ["Owner Only", "No Category", "ColorRole"]:
+                embed.add_field(name=f"{cog_name} [{len(cog.get_commands() if cog else '.')}]",
+                                value=f"{cog_desc}\n`{'`  `'.join([i.name for i in filtered])}`")
+        embed.set_footer(text=f"See {self.context.prefix}help [command] for more info",
+                         icon_url=self.context.me.avatar.url)
+        await self.send(embed=embed)
+
+    async def send_command_help(self, command):
+        if command.hidden:
+            return
+        embed = discord.Embed(title=command.qualified_name, description=command.help,
+                              color=discord.Color.blurple(), timestamp=datetime.utcnow())
+        embed.add_field(name='Usage',
+                        value=f"**{self.context.prefix}{command.name} {command.signature}**\n{command.brief if command.brief is not None else ''}")
+        if command.aliases != []:
+            embed.add_field(name='Aliases', value=f"```\n{', '.join(command.aliases)}\n```", inline=False)
+        embed.set_footer(text="[] - optional, <> - required")
+        await self.send(embed=embed)
+
+    async def send_cog_help(self, cog):
+        pass
+
+    async def send_group_help(self, group):
+        pass

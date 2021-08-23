@@ -4,11 +4,18 @@ from discord.ext import commands
 import typing
 
 
+async def on_command_error(context, exception):
+    if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner):
+        return
+    await context.reply(
+        f"{exception}\nCorrect Usage: ```\n{context.prefix}{context.command.qualified_name} {context.command.signature}\n```")
+    raise exception  # this is basic error handling.. it'll send the runtime errors simply
+
+
 class BotSettings(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.guild = self.client.get_guild(799974967504535572)
-        self.deleted = []
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -36,26 +43,32 @@ class BotSettings(commands.Cog):
             for i in extensions:
                 self.client.reload_extension(i)
                 embed.description += f"{i} reloaded successfully.\n"
-            await ctx.message.delete()
             await ctx.send(embed=embed)
             return
         self.client.reload_extension(f"cogs.{cog}")
-        await ctx.message.delete()
+
         await ctx.send(f"{cog} reloaded successfully.")
 
-    @commands.command(aliases = ["pong"])
-    async def ping(self, ctx):
+    @commands.command()
+    @commands.is_owner()
+    async def load(self, ctx, cog):
         """
-        This command is used to Find latency of bot
+        This command is Used to UnLoad a cog
         """
-        await ctx.message.delete()
-        if self.client.latency > 500:
-            await ctx.send(f'Pong! :ping_pong: \nResponse TIme: {round(self.client.latency*1000)}ms \nThe ping is high' )
-        else:
-            await ctx.send(f"Pong! :ping_pong: \nResponse Time: {round(self.client.latency*1000)}ms \nPing is fine. I'm working normal.")
+        self.client.load_extension(f"cogs.{cog}")
+        await ctx.send(f"{cog} unloaded successfully.")
 
     @commands.command()
-    async def suggest(self, ctx,*,message):
+    @commands.is_owner()
+    async def unload(self, ctx, cog):
+        """
+        This command is Used to UnLoad a cog
+        """
+        self.client.unload_extension(f"cogs.{cog}")
+        await ctx.send(f"{cog} unloaded successfully.")
+
+    @commands.command()
+    async def suggest(self, ctx, *, message):
         """
         This is command is used to send a suggestion in the suggestion channel
         """
@@ -84,7 +97,6 @@ class BotSettings(commands.Cog):
         await ctx.message.delete()
         await channel.send(message1, files=files)
 
-
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     async def dm(self, ctx, user: discord.Member, *, message):
@@ -95,8 +107,8 @@ class BotSettings(commands.Cog):
                  ctx.message.attachments] if ctx.message.attachments != [] else None
 
         message1 = message
-        await ctx.message.delete()
         await user.send(message1, files=files)
+
 
 def setup(client):
     client.add_cog(BotSettings(client))
