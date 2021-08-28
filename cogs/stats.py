@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import platform
 
+from main import version
+
 
 class Stats(commands.Cog):
     def __init__(self, client):
@@ -57,8 +59,8 @@ class Stats(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.Cog.listener()
-    async def on_message(self,message):
-        if message.content.lower() == "aurora botinfo":
+    async def on_message(self, message):
+        if message.content.lower() == ">bot info":
 
             pythonVersion = platform.python_version()
             dpyVersion = discord.__version__
@@ -72,7 +74,7 @@ class Stats(commands.Cog):
                 timestamp=message.created_at,
             )
 
-            embed.add_field(name="Bot Version:", value="7")
+            embed.add_field(name="Bot Version:", value=version)
             embed.add_field(name="Python Version:", value=pythonVersion)
             embed.add_field(name="Discord.Py Version", value=dpyVersion)
             embed.add_field(name="Total Guilds:", value=serverCount)
@@ -84,8 +86,8 @@ class Stats(commands.Cog):
             embed.set_thumbnail(url=self.client.user.avatar.url)
             await message.channel.send(embed=embed)
 
-    @commands.command()
-    async def channelstats(self, ctx, channel: discord.TextChannel = None):
+    @commands.command(name="channelstats", aliases=["cs"])
+    async def channel_stats(self, ctx, channel: discord.TextChannel = None):
         """
         This Command Provides us the stats of the channel
         """

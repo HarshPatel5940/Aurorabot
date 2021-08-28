@@ -12,7 +12,7 @@ start_time = time.time()
 # client
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='>', case_insensitive=True, owner_ids=[448740493468106753, 798584468998586388],
-                      intents=intents,help_command=HelpCommand())
+                      intents=intents, help_command=HelpCommand())
 
 
 cwd = Path(__file__).parents[0]
@@ -30,7 +30,7 @@ async def on_ready():
     # stuff
     print("Bot is alive")
 
-client.version = "7"
+version = "8.1"
 
 
 @client.command()

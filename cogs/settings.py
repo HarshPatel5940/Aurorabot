@@ -21,7 +21,17 @@ class BotSettings(commands.Cog):
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
-    @commands.command()
+    @staticmethod
+    def cleanup_code(content):
+        """Automatically removes code blocks from the code."""
+        # remove ```py\n```
+        if content.startswith('```') and content.endswith('```'):
+            return '\n'.join(content.split('\n')[1:-1])
+
+        # remove `foo`
+        return content.strip('` \n')
+
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def reload(self, ctx, cog):
         """
@@ -48,7 +58,7 @@ class BotSettings(commands.Cog):
 
         await ctx.send(f"{cog} reloaded successfully.")
 
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def load(self, ctx, cog):
         """
@@ -57,7 +67,7 @@ class BotSettings(commands.Cog):
         self.client.load_extension(f"cogs.{cog}")
         await ctx.send(f"{cog} unloaded successfully.")
 
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def unload(self, ctx, cog):
         """

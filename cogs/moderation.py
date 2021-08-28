@@ -24,7 +24,7 @@ class Moderation(commands.Cog):
             await ctx.channel.purge(limit=amount)
             await ctx.send(f'{amount} messages deleted successfully.', delete_after=5)
 
-    @commands.command(name = "sm")
+    @commands.command(name="sm")
     @commands.has_permissions(manage_roles=True)
     async def setdelay(self, ctx, seconds: int):
         """
@@ -87,7 +87,7 @@ class Moderation(commands.Cog):
             role = await ctx.guild.create_role(name='Muted ', reason="bot muted role")
 
         await member.add_roles(role)
-        await ctx.send(f"{member.name}#{member.discriminator} Has Been Muted")
+        await ctx.send(f"**{member.name}#{member.discriminator} Has Been Muted**")
         channel = self.client.get_channel(863000643303374920)
         mute_msg = f"{member.mention} Has Been Muted By {ctx.author.name}#{ctx.author.discriminator} \n Reason : {reason}"
         await channel.send(mute_msg)
@@ -111,15 +111,13 @@ class Moderation(commands.Cog):
             mute_msg = f"{member.mention} Has Been Unuted By {ctx.author.name}#{ctx.author.discriminator} \n Reason : {reason}"
             await channel.send(mute_msg)
 
-    @commands.command(
-        name="kick",
-        description="A command which kicks a given user",
-        usage="<user> [reason]",
-    )
+    @commands.command()
     @commands.guild_only()
     @commands.has_guild_permissions(ban_members=True)
     async def kick(self, ctx, member: discord.Member, *, reason=None):
-
+        """
+        this command Kicks a member
+        """
         if member.mention == ctx.author.mention:
             await ctx.send(f"you cannot kick your self dumb", delete_after=10)
         elif member.guild_permissions.administrator or member.guild_permissions.ban_members:
@@ -135,17 +133,14 @@ class Moderation(commands.Cog):
         )
         log_channel = self.client.get_channel(863000643303374920)
         await log_channel.send(embed=embed)
-        await ctx.send(f"**{member.name}** Has Been Kicked!")
+        await ctx.send(f"**{member.name} Has Been Kicked!**")
 
-    @commands.command(
-        name="ban",
-        description="A command which bans a given user",
-        usage="<user> [reason]",
-    )
-    @commands.guild_only()
+    @commands.command()
     @commands.has_guild_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, reason=None):
-
+        """
+        A command which bans a given user
+        """
         if member.mention == ctx.author.mention:
             await ctx.send(f"you cannot Ban your self dumb", delete_after=10)
 
@@ -165,14 +160,13 @@ class Moderation(commands.Cog):
         await log_channel.send(embed=embed)
         await ctx.send(f"**{member.name}** Has Been Banned!")
 
-    @commands.command(
-        name="unban",
-        description="A command which unbans a given user",
-        usage="<user> [reason]",
-    )
+    @commands.command()
     @commands.guild_only()
     @commands.has_guild_permissions(ban_members=True)
     async def unban(self, ctx, member, *, reason=None):
+        """
+        A command which unbans a given user
+        """
         member = await self.client.fetch_user(int(member))
         await ctx.guild.unban(member, reason=reason)
 
