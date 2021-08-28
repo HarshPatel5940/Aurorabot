@@ -1,0 +1,12 @@
+https://github.com/rapptz/discord.py/archive/master.zip
+pytz
+DiscordUtils
+pip
+wheel
+attrs
+idna
+multidict
+yarl
+aiohttp
+chardet
+setuptools
