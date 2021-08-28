@@ -21,9 +21,9 @@ class Events(commands.Cog):
             return
         if not message.guild:
 
-            if len(message.content) < 20:
+            if len(message.content) < 10:
                 await message.channel.send(
-                    "Your message should be at least 20 characters in length to be sent to Staff.")
+                    "Your message should be at least 10 characters in length to be sent to Staff.")
                 return
             else:
                 embed = discord.Embed(
@@ -32,22 +32,22 @@ class Events(commands.Cog):
                     color=0x00ff00,
                     timestamp=datetime.now(self.IST)
                 )
-                embed.add_field(name=f"reply with `>dm {message.author.id}", value="Reply to ur member", inline=False)
+                embed.add_field(name=f"reply with >dm {message.author.id}", value="Reply to ur member", inline=False)
 
-                embed.set_thumbnail(url=message.author.avatar_url)
+                embed.set_thumbnail(url=message.author.avatar.url)
 
                 log_channel = self.client.get_channel(863000430203895808)
                 await log_channel.send(embed=embed)
 
                 embed2 = discord.Embed(
                     title="Message Has Been Sent ",
-                    description="<a:Red_alert:835058393475448833> Message Has Been Sent to Staff Succesfully<a:Red_alert:835058393475448833>\nStaff Will Contact You as soon as possible\nreplying to this message or sending message will create a new ticket\n\n**If you need to send a image or attachment pls send the link of attachment with the message**",
+                    description="<a:Red_alert:863017113581256715> Message Has Been Sent to Staff Successfully <a:Red_alert:863017113581256715>\nStaff Will Contact You as soon as possible\nreplying to this message or sending message will create a new ticket\n\n**If you need to send a image or attachment pls send the link of attachment with the message**",
                     color=0x00ff00,
                     timestamp=datetime.now(self.IST)
                 )
-                embed2.set_footer(text="Brawl Family Management Team")
+                embed2.set_footer(text=f"{log_channel.guild.name} Management Team")
                 embed2.set_thumbnail(
-                    url="https://cdn.discordapp.com/icons/483087746332622851/436d76d81824a558077d0c8811c12b27.png")
+                    url="https://cdn.discordapp.com/icons/799974967504535572/a_eecabad5e77279928c7684ce09964fb8.gif")
                 await asyncio.sleep(1)
                 await message.channel.send(embed=embed2)
                 return

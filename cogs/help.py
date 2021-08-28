@@ -42,7 +42,7 @@ class HelpCommand(commands.DefaultHelpCommand):
             filtered = await self.filter_commands(commands=command)
             cog_name = getattr(cog, 'qualified_name', "No Category")
             cog_desc = getattr(cog, 'description', "")
-            if cog_name not in ["Owner Only", "No Category", "ColorRole"]:
+            if cog_name not in ["Owner Only", "Invites", "Events", "Automod"]:
                 embed.add_field(name=f"{cog_name} [{len(cog.get_commands() if cog else '.')}]",
                                 value=f"{cog_desc}\n`{'`  `'.join([i.name for i in filtered])}`")
         embed.set_footer(text=f"See {self.context.prefix}help [command] for more info",

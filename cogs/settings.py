@@ -4,11 +4,11 @@ from discord.ext import commands
 import typing
 
 
-async def on_command_error(context, exception):
-    if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner):
+async def on_command_error(message, exception):
+    if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner) or isinstance(message.channel, discord.DMChannel):
         return
-    await context.reply(
-        f"{exception}\nCorrect Usage: ```\n{context.prefix}{context.command.qualified_name} {context.command.signature}\n```")
+    await message.reply(
+        f"{exception}\nCorrect Usage: ```\n{message.prefix}{message.command.qualified_name} {message.command.signature}\n```")
     raise exception  # this is basic error handling.. it'll send the runtime errors simply
 
 
@@ -30,7 +30,6 @@ class BotSettings(commands.Cog):
         if cog == 'all':
             embed = discord.Embed(title='Reloading Cogs...', description='', color=discord.Color.green())
             extensions = [
-                "cogs.channels",
                 "cogs.events",
                 "cogs.moderation",
                 'cogs.giveaway',
@@ -73,7 +72,7 @@ class BotSettings(commands.Cog):
         This is command is used to send a suggestion in the suggestion channel
         """
         message1 = message
-        emb=discord.Embed(title= f"Suggest from {ctx.author.name}#{ctx.author.discriminator}", description=f"Suggester: {ctx.author.mention} \nsuggestion : {message1}",color=0xff9200)
+        emb=discord.Embed(title=f"Suggest from {ctx.author.name}#{ctx.author.discriminator}", description=f"Suggester: {ctx.author.mention} \nsuggestion : {message1}",color=0xff9200)
         channel = self.client.get_channel(799980922518372402)
 
         await ctx.message.delete()
@@ -108,6 +107,7 @@ class BotSettings(commands.Cog):
 
         message1 = message
         await user.send(message1, files=files)
+        await ctx.message.add_reaction("✅")
 
 
 def setup(client):

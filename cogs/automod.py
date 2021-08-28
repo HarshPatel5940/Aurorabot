@@ -1,3 +1,5 @@
+from datetime import datetime
+import asyncio
 import discord
 from discord.ext import commands
 
@@ -14,6 +16,11 @@ class Automod(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
 
+        def check(m):
+            return (m.author == message.author
+                    and len(m.content)
+                    and (discord.utils.utcnow() - m.created_at).seconds < 4)
+
         if len(message.content) > 1500:
             if message.author.guild_permissions.manage_messages:
                 return
@@ -27,7 +34,7 @@ class Automod(commands.Cog):
         for words in bad_words:
             if words in message.content.lower():
                 if message.author.guild_permissions.manage_messages:
-                    await message.channe.send(f"{message.author.mention} Ik you are staff pls mind ur language")
+                    await message.channel.send(f"{message.author.mention} Ik you are staff pls mind ur language")
                     return
                 await message.delete()
                 await message.channel.send(
@@ -40,6 +47,19 @@ class Automod(commands.Cog):
             await message.channel.send(
                 f"{message.author.mention} No invite Links allowed!\n\nRepeating this will Cause in a Mute.")
 
+        if len(list(filter(lambda message: check(message), self.client.cached_messages))) >= 5:
+            if message.author.guild_permissions.manage_roles:
+                await message.channel.send(
+                    f"{message.author.mention} AY sir, ik you are **staff that does not means you can spam** !!")
+                return
+            await message.channel.send(
+                f"{message.author.mention} Don't spam Messages! You Have Been Muted in Server for 5m")
+            role = discord.utils.get(message.guild.roles, name="Muted")
+            await message.author.add_roles(role)
+            log_channel = self.client.get_channel(863000643303374920)
+            await log_channel.send(f"**{message.author.mention} You Have Been Muted in Server for 5m**")
+            await asyncio.sleep(300)
+            await message.author.remove_roles(role)
 
 
 def setup(client):
