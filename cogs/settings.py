@@ -1,6 +1,12 @@
+import io
+import textwrap
+import traceback
+from contextlib import redirect_stdout
+
 import discord
 from discord.ext import commands
 import typing
+from datetime import datetime as dt
 
 
 async def on_command_error(message, exception):
@@ -15,6 +21,7 @@ class BotSettings(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.guild = self.client.get_guild(799974967504535572)
+        self._last_result = None
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -23,6 +30,7 @@ class BotSettings(commands.Cog):
                                                                     name='PunisherYT'))
 
     @staticmethod
+
     def cleanup_code(content):
         """Automatically removes code blocks from the code."""
         # remove ```py\n```
@@ -138,6 +146,56 @@ class BotSettings(commands.Cog):
         embed = discord.Embed(description=message, color=0x00d1ff)
         await user.send(embed=embed)
         await ctx.message.add_reaction("✅")
+
+
+    @commands.command()
+    @commands.is_owner()
+    async def eval(self, ctx, *, code: str):
+        """Evaluate a code block"""
+        env = {
+            'client': self.client,
+            'ctx': ctx,
+            'channel': ctx.channel,
+            'author': ctx.author,
+            'guild': ctx.guild,
+            'message': ctx.message,
+            'command': ctx.command,
+            'datetime': dt,
+            '_': self._last_result
+        }
+
+        env.update(globals())
+
+        body = self.cleanup_code(code)
+        stdout = io.StringIO()
+
+        to_compile = f'async def func():\n{textwrap.indent(body, "  ")}'
+
+        try:
+            exec(to_compile, env)
+        except Exception as e:
+            return await ctx.reply(f'```py\n{e.__class__.__name__}: {e}\n```')
+
+        func = env['func']
+        try:
+            with redirect_stdout(stdout):
+                ret = await func()
+        except Exception as e:
+            value = stdout.getvalue()
+            await ctx.reply(f'```py\n{value}{traceback.format_exc()}\n```')
+        else:
+            value = stdout.getvalue()
+            try:
+                await ctx.message.add_reaction('\u2705')
+            except:
+                pass
+
+            if ret is None:
+                if value:
+                    await ctx.reply(f'```py\n{value}\n```')
+            else:
+                self._last_result = ret
+                await ctx.reply(f'```py\n{value}{ret}\n```')
 
 
 def setup(client):
