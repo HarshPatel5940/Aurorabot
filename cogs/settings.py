@@ -1,4 +1,3 @@
-import asyncio
 import discord
 from discord.ext import commands
 import typing
@@ -20,6 +19,8 @@ class BotSettings(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
+        await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening,
+                                                                    name='PunisherYT'))
 
     @staticmethod
     def cleanup_code(content):
@@ -31,7 +32,7 @@ class BotSettings(commands.Cog):
         # remove `foo`
         return content.strip('` \n')
 
-    @commands.command(hidden=True)
+    @commands.command()
     @commands.is_owner()
     async def reload(self, ctx, cog):
         """
@@ -42,7 +43,6 @@ class BotSettings(commands.Cog):
             extensions = [
                 "cogs.events",
                 "cogs.moderation",
-                'cogs.giveaway',
                 "cogs.settings",
                 "cogs.invites",
                 "cogs.automod",
@@ -58,7 +58,7 @@ class BotSettings(commands.Cog):
 
         await ctx.send(f"{cog} reloaded successfully.")
 
-    @commands.command(hidden=True)
+    @commands.command()
     @commands.is_owner()
     async def load(self, ctx, cog):
         """
@@ -67,7 +67,7 @@ class BotSettings(commands.Cog):
         self.client.load_extension(f"cogs.{cog}")
         await ctx.send(f"{cog} unloaded successfully.")
 
-    @commands.command(hidden=True)
+    @commands.command()
     @commands.is_owner()
     async def unload(self, ctx, cog):
         """
@@ -77,23 +77,7 @@ class BotSettings(commands.Cog):
         await ctx.send(f"{cog} unloaded successfully.")
 
     @commands.command()
-    async def suggest(self, ctx, *, message):
-        """
-        This is command is used to send a suggestion in the suggestion channel
-        """
-        message1 = message
-        emb=discord.Embed(title=f"Suggest from {ctx.author.name}#{ctx.author.discriminator}", description=f"Suggester: {ctx.author.mention} \nsuggestion : {message1}",color=0xff9200)
-        channel = self.client.get_channel(799980922518372402)
-
-        await ctx.message.delete()
-        msg=await channel.send(embed=emb)
-        await msg.add_reaction('👍')
-        await msg.add_reaction('👎')
-        await asyncio.sleep(1)
-        await ctx.send(f"{ctx.author.mention} Suggestion sent!")
-
-    @commands.command()
-    @commands.check_any(commands.is_owner(), commands.has_permissions(administrator=True))
+    @commands.has_permissions(manage_roles=True)
     async def echo(self, ctx, channel: typing.Optional[discord.TextChannel] = None, *, message):
         """
         This Command is used to send a Message Through Bot in a channel
@@ -106,6 +90,31 @@ class BotSettings(commands.Cog):
         await ctx.message.delete()
         await channel.send(message1, files=files)
 
+    @commands.command(aliases=["emb"])
+    @commands.has_permissions(manage_roles=True)
+    async def embed(self, ctx, channel: typing.Optional[discord.TextChannel] = None, *, message):
+        """
+        This Command is used to send a Embed Through Bot in a channel
+        """
+        channel = channel or ctx.channel
+        embed = discord.Embed(description=message, color=0x00d1ff)
+        await channel.send(embed=embed)
+        await ctx.message.add_reaction("✅")
+
+    @commands.command(name="editembed")
+    @commands.has_permissions(manage_roles=True)
+    async def edit_embed(self, ctx, channel: discord.TextChannel, id_: int, *, message):
+        """Edit Exsisting Embed"""
+        msg1 = 0
+        try:
+            msg1 = await channel.fetch_message(id_)
+        except:
+            await ctx.send("The channel or ID mentioned was incorrect")
+
+        new_embed = discord.Embed(description=message, color=0x00d1ff)
+        await msg1.edit(embed=new_embed)
+        await ctx.message.add_reaction("✅")
+
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     async def dm(self, ctx, user: discord.Member, *, message):
@@ -117,6 +126,17 @@ class BotSettings(commands.Cog):
 
         message1 = message
         await user.send(message1, files=files)
+        await ctx.message.add_reaction("✅")
+
+    @commands.command(aliases=["dmemb"])
+    @commands.has_permissions(manage_roles=True)
+    async def dm_embed(self, ctx, user: discord.Member, *, message):
+        """
+        This Command is used to send a Embed Through Bot in a channel
+        """
+
+        embed = discord.Embed(description=message, color=0x00d1ff)
+        await user.send(embed=embed)
         await ctx.message.add_reaction("✅")
 
 

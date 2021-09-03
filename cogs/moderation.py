@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-
+from asyncio import sleep
 
 class Moderation(commands.Cog):
     def __init__(self, client):
@@ -160,21 +160,21 @@ class Moderation(commands.Cog):
         await log_channel.send(embed=embed)
         await ctx.send(f"**{member.name}** Has Been Banned!")
 
-    @commands.command()
-    @commands.guild_only()
-    @commands.has_guild_permissions(ban_members=True)
-    async def unban(self, ctx, member, *, reason=None):
-        """
-        A command which unbans a given user
-        """
-        member = await self.client.fetch_user(int(member))
-        await ctx.guild.unban(member, reason=reason)
+    @commands.command(name='unban', aliases=['ub'], description="Unbans a given user from the server")
+    @commands.check_any(commands.is_owner(), commands.has_permissions(ban_members=True))
+    async def _unban(self, ctx, member: discord.User = None, *, reason=None):
+        if reason is None:
+            reason = f"Unbanned by {ctx.author}"
+        else:
+            reason = f"Unbanned by {ctx.author}, with reason:- {reason}"
 
-        embed = discord.Embed(
-            title=f"{ctx.author.name} unbanned: {member.name}", description=reason
-        )
+        bandec = f"Name:- {member} \nID:- {member.id} \nResponsible Moderator:- {ctx.author}"
+        embed = discord.Embed(title="Unban Case", description=bandec)
+
+        await ctx.guild.unban(member, reason=reason)
         log_channel = self.client.get_channel(863000643303374920)
         await log_channel.send(embed=embed)
+        await sleep(1)
         await ctx.send(f"**{member.name}** Has Been Unbanned!")
 
 
