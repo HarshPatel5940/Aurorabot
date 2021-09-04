@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from asyncio import sleep
 
+
 class Moderation(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -31,7 +32,7 @@ class Moderation(commands.Cog):
         This command is used to add/remove slowmode in chat
         """
 
-        await ctx.channel.edit(slowmode_delay=seconds)
+        await ctx.channel.edit(slowmode_delay=seconds, reason=f"{ctx.author} changed slowmode to {seconds}")
         if seconds == 0:
             await ctx.send(f"Slowmode disabled for {ctx.channel.mention}")
         else:
@@ -49,20 +50,20 @@ class Moderation(commands.Cog):
             overwrites = {
                 ctx.guild.default_role: discord.PermissionOverwrite(send_messages=False)
             }
-            await channel.edit(overwrites=overwrites)
+            await channel.edit(overwrites=overwrites, reason=f"channel lock by {ctx.author}")
             await ctx.send(f"I have put {channel.name} on lockdown.")
         elif (
                 channel.overwrites[ctx.guild.default_role].send_messages is True
                 or channel.overwrites[ctx.guild.default_role].send_messages is None
         ):
             overwrites = channel.overwrites[ctx.guild.default_role]
-            overwrites.send.messages = False
-            await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites)
+            overwrites.send_messages = False
+            await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites, reason=f"channel lock by {ctx.author}")
             await ctx.send(f"I have put {channel.mention} on lockdown.")
         else:
             overwrites = channel.overwrites[ctx.guild.default_role]
-            overwrites.send.messages = True
-            await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites)
+            overwrites.send_messages = None
+            await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites, reason=f"channel unlock by {ctx.author}")
             await ctx.send(f"I have removed {channel.mention} from lockdown.")
 
     @commands.command(aliases=["m"])
@@ -86,7 +87,7 @@ class Moderation(commands.Cog):
         if role == None:
             role = await ctx.guild.create_role(name='Muted ', reason="bot muted role")
 
-        await member.add_roles(role)
+        await member.add_roles(role, reason=f"Muted by:{ctx.author}, reason: {reason}")
         await ctx.send(f"**{member.name}#{member.discriminator} Has Been Muted**")
         channel = self.client.get_channel(863000643303374920)
         mute_msg = f"{member.mention} Has Been Muted By {ctx.author.name}#{ctx.author.discriminator} \n Reason : {reason}"
@@ -104,7 +105,7 @@ class Moderation(commands.Cog):
                            delete_after=10)
         else:
             role = discord.utils.get(ctx.guild.roles, name="Muted")
-            await member.remove_roles(role)
+            await member.remove_roles(role, reason=f"Unmuted by:{ctx.author}, reason: {reason}")
 
             await ctx.send(f"**{member.display_name}#{member.discriminator} Has Been Unmuted**")
             channel = self.client.get_channel(863000643303374920)
@@ -127,7 +128,7 @@ class Moderation(commands.Cog):
             await ctx.send(f"You can only moderate members below your role", delete_after=10)
             return
 
-        await ctx.guild.kick(user=member, reason=reason)
+        await ctx.guild.kick(user=member, reason=f"kick by:{ctx.author}, reason: {reason}")
         embed = discord.Embed(
             title=f"{ctx.author.name} kicked: {member.name}", description=reason
         )
@@ -151,7 +152,7 @@ class Moderation(commands.Cog):
             await ctx.send(f"You can only moderate members below your role", delete_after=10)
             return
 
-        await ctx.guild.ban(user=member, reason=reason)
+        await ctx.guild.ban(user=member, reason=f"Muted by:{ctx.author}, reason: {reason}")
 
         embed = discord.Embed(
             title=f"{ctx.author.name} banned: {member.name}", description=reason
@@ -171,7 +172,7 @@ class Moderation(commands.Cog):
         bandec = f"Name:- {member} \nID:- {member.id} \nResponsible Moderator:- {ctx.author}"
         embed = discord.Embed(title="Unban Case", description=bandec)
 
-        await ctx.guild.unban(member, reason=reason)
+        await ctx.guild.unban(member, reason=f"Unban by:{ctx.author} , for {reason}")
         log_channel = self.client.get_channel(863000643303374920)
         await log_channel.send(embed=embed)
         await sleep(1)
