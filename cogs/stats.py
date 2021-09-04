@@ -81,7 +81,7 @@ class Stats(commands.Cog):
             embed.add_field(name="Total Users:", value=memberCount)
             embed.add_field(name="Bot Made By:", value="<@448740493468106753>")
 
-            embed.set_footer(text=f"FRNz Official Community | {self.client.user.name}")
+            embed.set_footer(text=f"{message.guild.name} | {self.client.user.name}")
             embed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar.url)
             embed.set_thumbnail(url=self.client.user.avatar.url)
             await message.channel.send(embed=embed)
