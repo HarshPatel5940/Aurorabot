@@ -43,7 +43,7 @@ class Invites(commands.Cog):
         if inviter is None:
             inviter.name = "Inviter Not Found"
             inviter.discriminator = " Link deleted "
-
+        general = self.client.get_channel(799974968921292812)
         channel = self.client.get_channel(799978267293646868)
         guild = self.client.get_guild(799974967504535572)
         embed1 = discord.Embed(
@@ -61,6 +61,7 @@ class Invites(commands.Cog):
 <a:Heart:815506676533690390>Remember to Read Rules in <#799978440492449842>
 <a:Heart:815506676533690390>Take Self roles in <#799978698064265226>
 <a:Heart:815506676533690390>Have a great time here in {guild.name} """
+        x3 = f"{member.mention} Welcome to our FRNz Official community.\n since Dms off sent here"
         embed2 = discord.Embed(
             title="Welcome To FRNz Official Server",
             description=x2,
@@ -70,8 +71,10 @@ class Invites(commands.Cog):
         embed2.set_thumbnail(url=member.guild.icon.url)
         embed2.set_author(name=member.name, icon_url=member.avatar.url)
         embed2.set_footer(text=member.guild.name, icon_url=member.guild.icon.url)
-
-        await member.send(x1, embed=embed2)
+        try:
+            await member.send(x1, embed=embed2)
+        except:
+            await general.send(x3, embed2)
         await asyncio.sleep(1)
         await channel.send(embed=embed1)
 
