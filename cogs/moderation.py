@@ -39,10 +39,10 @@ class Moderation(commands.Cog):
             await ctx.send(f"Channel {ctx.channel.mention} slowmode set to {seconds} seconds.")
 
     @commands.command(aliases=["lock", "l"])
-    @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_roles=True, manage_messages=True)
     async def lockdown(self, ctx, channel: discord.TextChannel = None):
         """
-        This Command is used to Lock Or Unlock a Channel
+        This Command is used to Lock  Channel
         """
         channel = channel or ctx.channel
 
@@ -51,7 +51,7 @@ class Moderation(commands.Cog):
                 ctx.guild.default_role: discord.PermissionOverwrite(send_messages=False)
             }
             await channel.edit(overwrites=overwrites, reason=f"channel lock by {ctx.author}")
-            await ctx.send(f"I have put {channel.name} on lockdown.")
+            await ctx.send(f":white_check_mark: Locked {channel.mention}")
         elif (
                 channel.overwrites[ctx.guild.default_role].send_messages is True
                 or channel.overwrites[ctx.guild.default_role].send_messages is None
@@ -59,15 +59,83 @@ class Moderation(commands.Cog):
             overwrites = channel.overwrites[ctx.guild.default_role]
             overwrites.send_messages = False
             await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites, reason=f"channel lock by {ctx.author}")
-            await ctx.send(f"I have put {channel.mention} on lockdown.")
+            await ctx.send(f":white_check_mark: Locked {channel.mention}")
         else:
+            await ctx.reply(f"{channel.mention} is **already Locked** :exclamation:")
+
+    @commands.command(aliases=["unlock", "ul"])
+    @commands.has_permissions(manage_roles=True, manage_messages=True)
+    async def unlockdown(self, ctx, channel: discord.TextChannel = None):
+        """
+        This Command is used to Unlock a Channel
+        """
+        channel = channel or ctx.channel
+
+        if ctx.guild.default_role not in channel.overwrites:
+            overwrites = {
+                ctx.guild.default_role: discord.PermissionOverwrite(send_messages=None)
+            }
+            await channel.edit(overwrites=overwrites, reason=f"channel unlock by {ctx.author}")
+            await ctx.send(f":white_check_mark: unlocked {channel.mention} ")
+        elif (
+                channel.overwrites[ctx.guild.default_role].send_messages is False):
             overwrites = channel.overwrites[ctx.guild.default_role]
             overwrites.send_messages = None
             await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites, reason=f"channel unlock by {ctx.author}")
-            await ctx.send(f"I have removed {channel.mention} from lockdown.")
+            await ctx.send(f" :white_check_mark: unlocked {channel.mention}  ")
+        else:
+            await ctx.reply(f"{channel.mention} is **already Unlocked** :exclamation:")
+
+    @commands.command(aliases=["h"])
+    @commands.has_permissions(manage_channels=True)
+    async def hide(self, ctx, channel: discord.TextChannel = None):
+        """
+        This Command is used to Lock  Channel
+        """
+        channel = channel or ctx.channel
+
+        if ctx.guild.default_role not in channel.overwrites:
+            overwrites = {
+                ctx.guild.default_role: discord.PermissionOverwrite(view_messages=False)
+            }
+            await channel.edit(overwrites=overwrites, reason=f"channel made private by {ctx.author}")
+            await ctx.send(f":white_check_mark: {channel.mention} is Now Private")
+        elif (
+                channel.overwrites[ctx.guild.default_role].view_messages is True
+                or channel.overwrites[ctx.guild.default_role].view_messages is None
+        ):
+            overwrites = channel.overwrites[ctx.guild.default_role]
+            overwrites.view_messages = False
+            await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites, reason=f"channel made private by {ctx.author}")
+            await ctx.send(f":white_check_mark: {channel.mention} is Now Private")
+        else:
+            await ctx.reply(f"{channel.mention} is **already private** :exclamation:")
+
+    @commands.command(aliases=["uh"])
+    @commands.has_permissions(manage_channels=True)
+    async def unhide(self, ctx, channel: discord.TextChannel = None):
+        """
+        This Command is used to Lock  Channel
+        """
+        channel = channel or ctx.channel
+
+        if ctx.guild.default_role not in channel.overwrites:
+            overwrites = {
+                ctx.guild.default_role: discord.PermissionOverwrite(view_messages=None)
+            }
+            await channel.edit(overwrites=overwrites, reason=f"channel made private by {ctx.author}")
+            await ctx.send(f":white_check_mark: {channel.mention} is Now public")
+        elif (
+                channel.overwrites[ctx.guild.default_role].view_messages is False):
+            overwrites = channel.overwrites[ctx.guild.default_role]
+            overwrites.view_messages = None
+            await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites, reason=f"channel made private by {ctx.author}")
+            await ctx.send(f":white_check_mark: {channel.mention} is Now public")
+        else:
+            await ctx.reply(f"{channel.mention} is **already public** :exclamation:")
 
     @commands.command(aliases=["m"])
-    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True, manage_messages=True)
     async def mute(self, ctx, member: discord.Member = None, *, reason="no reason provided "):
         """
         This is a mute command which mutes the User
@@ -90,11 +158,11 @@ class Moderation(commands.Cog):
         await member.add_roles(role, reason=f"Muted by:{ctx.author}, reason: {reason}")
         await ctx.send(f"**{member.name}#{member.discriminator} Has Been Muted**")
         channel = self.client.get_channel(863000643303374920)
-        mute_msg = f"{member.mention} Has Been Muted By {ctx.author.name}#{ctx.author.discriminator} \n Reason : {reason}"
-        await channel.send(mute_msg)
+        embed = discord.Embed(title=f"{ctx.author.name} Muted: {member.name}", description=f"reason : {reason}", color=0xe70d0d)
+        await channel.send(embed=embed)
 
     @commands.command(aliases=["um"])
-    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True, manage_messages=True)
     async def unmute(self, ctx, member: discord.Member = None, *, reason="No reason provided"):
         """
         this command unmutes a member
@@ -109,8 +177,8 @@ class Moderation(commands.Cog):
 
             await ctx.send(f"**{member.display_name}#{member.discriminator} Has Been Unmuted**")
             channel = self.client.get_channel(863000643303374920)
-            mute_msg = f"{member.mention} Has Been Unuted By {ctx.author.name}#{ctx.author.discriminator} \n Reason : {reason}"
-            await channel.send(mute_msg)
+            embed = discord.Embed(title=f"{ctx.author.name} unmuted: {member.name}", description=f"reason : {reason}", color=0xe70d0d)
+            await channel.send(embed=embed)
 
     @commands.command()
     @commands.guild_only()
@@ -129,9 +197,7 @@ class Moderation(commands.Cog):
             return
 
         await ctx.guild.kick(user=member, reason=f"kick by:{ctx.author}, reason: {reason}")
-        embed = discord.Embed(
-            title=f"{ctx.author.name} kicked: {member.name}", description=reason
-        )
+        embed = discord.Embed(title=f"{ctx.author.name} kicked: {member.name}", description=f"reason : {reason}", color=0xe70d0d)
         log_channel = self.client.get_channel(863000643303374920)
         await log_channel.send(embed=embed)
         await ctx.send(f"**{member.name} Has Been Kicked!**")
@@ -152,18 +218,17 @@ class Moderation(commands.Cog):
             await ctx.send(f"You can only moderate members below your role", delete_after=10)
             return
 
-        await ctx.guild.ban(user=member, reason=f"Muted by:{ctx.author}, reason: {reason}")
+        await ctx.guild.ban(user=member, reason=f"Banned by:{ctx.author}, reason: {reason}")
 
-        embed = discord.Embed(
-            title=f"{ctx.author.name} banned: {member.name}", description=reason
-        )
+        embed = discord.Embed(title=f"{ctx.author.name} banned: {member.name}", description=f"reason : {reason}", color=0xe70d0d)
         log_channel = self.client.get_channel(863000643303374920)
         await log_channel.send(embed=embed)
+        await sleep(1)
         await ctx.send(f"**{member.name}** Has Been Banned!")
 
     @commands.command(name='unban', aliases=['ub'], description="Unbans a given user from the server")
     @commands.check_any(commands.is_owner(), commands.has_permissions(ban_members=True))
-    async def _unban(self, ctx, member: discord.User = None, *, reason=None):
+    async def unban(self, ctx, member: discord.User = None, *, reason=None):
         if reason is None:
             reason = f"Unbanned by {ctx.author}"
         else:
@@ -172,7 +237,7 @@ class Moderation(commands.Cog):
         bandec = f"Name:- {member} \nID:- {member.id} \nResponsible Moderator:- {ctx.author}"
         embed = discord.Embed(title="Unban Case", description=bandec)
 
-        await ctx.guild.unban(member, reason=f"Unban by:{ctx.author} , for {reason}")
+        embed = discord.Embed(title=f"{ctx.author.name} banned: {member.name}", description=f"reason : {reason}", color=0xe70d0d)
         log_channel = self.client.get_channel(863000643303374920)
         await log_channel.send(embed=embed)
         await sleep(1)
