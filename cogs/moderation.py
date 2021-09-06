@@ -96,16 +96,16 @@ class Moderation(commands.Cog):
 
         if ctx.guild.default_role not in channel.overwrites:
             overwrites = {
-                ctx.guild.default_role: discord.PermissionOverwrite(view_messages=False)
+                ctx.guild.default_role: discord.PermissionOverwrite(view_channel=False)
             }
             await channel.edit(overwrites=overwrites, reason=f"channel made private by {ctx.author}")
             await ctx.send(f":white_check_mark: {channel.mention} is Now Private")
         elif (
-                channel.overwrites[ctx.guild.default_role].view_messages is True
-                or channel.overwrites[ctx.guild.default_role].view_messages is None
+                channel.overwrites[ctx.guild.default_role].view_channel is True
+                or channel.overwrites[ctx.guild.default_role].view_channel is None
         ):
             overwrites = channel.overwrites[ctx.guild.default_role]
-            overwrites.view_messages = False
+            overwrites.view_channel = False
             await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites, reason=f"channel made private by {ctx.author}")
             await ctx.send(f":white_check_mark: {channel.mention} is Now Private")
         else:
@@ -121,14 +121,14 @@ class Moderation(commands.Cog):
 
         if ctx.guild.default_role not in channel.overwrites:
             overwrites = {
-                ctx.guild.default_role: discord.PermissionOverwrite(view_messages=None)
+                ctx.guild.default_role: discord.PermissionOverwrite(view_channel=None)
             }
             await channel.edit(overwrites=overwrites, reason=f"channel made private by {ctx.author}")
             await ctx.send(f":white_check_mark: {channel.mention} is Now public")
         elif (
-                channel.overwrites[ctx.guild.default_role].view_messages is False):
+                channel.overwrites[ctx.guild.default_role].view_channel is False):
             overwrites = channel.overwrites[ctx.guild.default_role]
-            overwrites.view_messages = None
+            overwrites.view_channel = None
             await channel.set_permissions(ctx.guild.default_role, overwrite=overwrites, reason=f"channel made private by {ctx.author}")
             await ctx.send(f":white_check_mark: {channel.mention} is Now public")
         else:
