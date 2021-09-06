@@ -138,36 +138,42 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        if before.content != after.content:
-            embed = discord.Embed(title="Message edit",
-                                  description=f"Edit by {after.author.name} , id = {after.author.id}",
-                                  colour=after.author.colour,
-                                  timestamp=datetime.now(self.IST))
+        try:
+            if before.content != after.content:
+                embed = discord.Embed(title="Message edit",
+                                      description=f"Edit by {after.author.name} , id = {after.author.id}",
+                                      colour=after.author.colour,
+                                      timestamp=datetime.now(self.IST))
 
-            fields = [("Before", before.content, False),
-                      ("After", after.content, False)]
+                fields = [("Before", before.content, False),
+                          ("After", after.content, False)]
 
-            for name, value, inline in fields:
-                embed.add_field(name=name, value=value, inline=inline)
-            log_channel = self.client.get_channel(863000479889096724)
-            await log_channel.send(embed=embed)
+                for name, value, inline in fields:
+                    embed.add_field(name=name, value=value, inline=inline)
+                log_channel = self.client.get_channel(863000479889096724)
+                await log_channel.send(embed=embed)
+        except:
+            pass
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        if not message.author.bot:
-            embed = discord.Embed(title="Message deletion",
-                                  description=f"Action by {message.author.display_name}.",
-                                  colour=message.author.colour,
-                                  timestamp=datetime.now(self.IST))
-            embed.add_field(name="member id : ", value=f"-{message.author.id}")
-            embed.add_field(name="channel : ", value=f"-{message.channel.mention}")
+        try:
+            if not message.author.bot:
+                embed = discord.Embed(title="Message deletion",
+                                      description=f"Action by {message.author.display_name}.",
+                                      colour=message.author.colour,
+                                      timestamp=datetime.now(self.IST))
+                embed.add_field(name="member id : ", value=f"-{message.author.id}")
+                embed.add_field(name="channel : ", value=f"-{message.channel.mention}")
 
-            fields = [("Content", message.content, False)]
-            for name, value, inline in fields:
-                embed.add_field(name=name, value=value, inline=inline)
+                fields = [("Content", message.content, False)]
+                for name, value, inline in fields:
+                    embed.add_field(name=name, value=value, inline=inline)
 
-            log_channel = self.client.get_channel(863000479889096724)
-            await log_channel.send(embed=embed)
+                log_channel = self.client.get_channel(863000479889096724)
+                await log_channel.send(embed=embed)
+        except:
+            pass
 
 
 def setup(client):
