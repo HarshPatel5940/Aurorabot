@@ -108,7 +108,7 @@ class BotSettings(commands.Cog):
         await channel.send(embed=embed)
         await ctx.message.add_reaction("✅")
 
-    @commands.command(name="editembed")
+    @commands.command(name="editemb")
     @commands.has_permissions(manage_roles=True)
     async def edit_embed(self, ctx, channel: discord.TextChannel, id_: int, *, message):
         """Edit Exsisting Embed"""
