@@ -59,7 +59,7 @@ class Events(commands.Cog):
             await message.reply("My Prefix is `>`, try running `>help`")
 
         elif message.content.lower() == "hi":
-            await message.channel.send(f"Hey {message.author.mention} Wat's Up?")
+            await message.reply(f"Hey buddy! Wat's Up?")
 
     @commands.Cog.listener()
     async def on_command_error(self, message, exception):
@@ -75,7 +75,7 @@ class Events(commands.Cog):
     async def on_user_update(self, before, after):
         if before.name != after.name:
             embed = discord.Embed(title=f"Username change",
-                                  colour=after.colour,
+                                  colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
             embed.add_field(name="Member Id :", value=f"{before.id}")
             fields = [("Before", before.name, False),
@@ -88,7 +88,7 @@ class Events(commands.Cog):
 
         if before.discriminator != after.discriminator:
             embed = discord.Embed(title=f"Discriminator change",
-                                  colour=after.colour,
+                                  colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
             embed.add_field(name="Member Id :", value=f"{before.id}")
             fields = [("Before", before.discriminator, False),
@@ -102,7 +102,7 @@ class Events(commands.Cog):
         if before.avatar.url != after.avatar.url:
             embed = discord.Embed(title=f"Avatar change",
                                   description="New image is below, old to the thumbnail.",
-                                  colour=after.colour,
+                                  colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
             embed.add_field(name="Member Id :", value=f"{before.id}")
             embed.set_thumbnail(url=before.avatar.url)
@@ -114,7 +114,7 @@ class Events(commands.Cog):
     async def on_member_update(self, before, after):
         if before.display_name != after.display_name:
             embed = discord.Embed(title=f"Nickname change",
-                                  colour=after.colour,
+                                  colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
             embed.add_field(name="Member Id :", value=f"{before.id}")
             fields = [("Before", before.display_name, False),
@@ -127,7 +127,7 @@ class Events(commands.Cog):
 
         elif before.roles != after.roles:
             embed = discord.Embed(title=f"Role updates",
-                                  colour=after.colour,
+                                  colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
             embed.add_field(name="Member Id :", value=f"{before.id}")
             fields = [("Before", ", ".join([r.mention for r in before.roles]), False),
@@ -144,7 +144,7 @@ class Events(commands.Cog):
             if before.content != after.content:
                 embed = discord.Embed(title="Message edit",
                                       description=f"Edit by {after.author.name} , id = {after.author.id}",
-                                      colour=after.author.colour,
+                                      colour=discord.Color.orange(),
                                       timestamp=datetime.now(self.IST))
 
                 fields = [("Before", before.content, False),
@@ -163,7 +163,7 @@ class Events(commands.Cog):
             if not message.author.bot:
                 embed = discord.Embed(title="Message deletion",
                                       description=f"Action by {message.author.display_name}.",
-                                      colour=message.author.colour,
+                                      colour=discord.Color.orange(),
                                       timestamp=datetime.now(self.IST))
                 embed.add_field(name="member id : ", value=f"-{message.author.id}")
                 embed.add_field(name="channel : ", value=f"-{message.channel.mention}")

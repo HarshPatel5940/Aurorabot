@@ -70,7 +70,7 @@ class Stats(commands.Cog):
             embed = discord.Embed(
                 title=f"{mem1.name} Stats | Prefix is >",
                 description="get the info of the bot in short",
-                colour=message.author.colour,
+                colour=discord.Color.blurple(),
                 timestamp=message.created_at,
             )
 
@@ -95,7 +95,7 @@ class Stats(commands.Cog):
         embed = discord.Embed(
             title=f"Stats for **{channel.name}**",
             description=f"{'Category: {}'.format(channel.category.name) if channel.category else 'This channel is not in a category'}",
-            color=0x2ECC71,
+            color=discord.Color.blurple(),
         )
         embed.add_field(name="Channel Guild", value=ctx.guild.name, inline=False)
         embed.add_field(name="Channel Id", value=channel.id, inline=False)

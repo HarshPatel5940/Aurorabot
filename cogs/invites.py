@@ -49,7 +49,7 @@ class Invites(commands.Cog):
         embed1 = discord.Embed(
             title=f"Welcome To FRNz Official Server.",
             description=f"**Member :** {member.mention}\n **Invited by: {inviter.name}#{inviter.discriminator}**",
-            color=0x14a00f,
+            color=discord.Color.teal(),
             timestamp=datetime.now(self.IST)
         )
         embed1.set_thumbnail(url=member.avatar.url)
@@ -65,7 +65,7 @@ class Invites(commands.Cog):
         embed2 = discord.Embed(
             title="Welcome To FRNz Official Server",
             description=x2,
-            color=0x17ffd9,
+            color=discord.Color.green(),
             timestamp=datetime.now(self.IST)
         )
         embed2.set_thumbnail(url=member.guild.icon.url)
@@ -86,7 +86,7 @@ class Invites(commands.Cog):
         embed = discord.Embed(
             title="A Member Just Left :( ",
             description="Goodbye from all of us..",
-            color=0xE74C3C,
+            color=discord.Color.red(),
             timestamp=datetime.now(self.IST)          
         )
         embed.set_thumbnail(url=member.avatar.url)

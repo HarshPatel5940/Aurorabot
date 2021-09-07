@@ -32,7 +32,7 @@ class Others(commands.Cog):
         This Command is used to send a Embed Through Bot in a channel
         """
         channel = channel or ctx.channel
-        embed = discord.Embed(description=message, color=0x00d1ff)
+        embed = discord.Embed(description=message, color=discord.Color.teal())
         await channel.send(embed=embed)
         await ctx.message.add_reaction("✅")
 
@@ -46,7 +46,7 @@ class Others(commands.Cog):
         except:
             await ctx.send("The channel or ID mentioned was incorrect")
 
-        new_embed = discord.Embed(description=message, color=0x00d1ff)
+        new_embed = discord.Embed(description=message, color=discord.Color.teal())
         await msg1.edit(embed=new_embed)
         await ctx.message.add_reaction("✅")
 
@@ -70,7 +70,7 @@ class Others(commands.Cog):
         This Command is used to send a Embed Through Bot in a channel
         """
 
-        embed = discord.Embed(description=message, color=0x00d1ff)
+        embed = discord.Embed(description=message, color=discord.Color.teal())
         await user.send(embed=embed)
         await ctx.message.add_reaction("✅")
 

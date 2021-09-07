@@ -14,13 +14,11 @@ class BotInfo(commands.Cog):
         """
         This command is used to calculate latency of bot.
         """
+        embed = discord.Embed(title="Bot Status",
+                              description=f"Pong! :ping_pong: \nResponse Time: {round(self.bot.latency * 1000)}ms",
+                              color=discord.Color.blurple())
 
-        if self.bot.latency > 500:
-            await ctx.send(
-                f'Pong! :ping_pong: \nResponse TIme: {round(self.bot.latency * 1000)}ms \nThe ping is high')
-        else:
-            await ctx.send(
-                f"Pong! :ping_pong: \nResponse Time: {round(self.bot.latency * 1000)}ms \nPing is fine. I'm working normal.")
+        await ctx.reply(embed=embed)
 
 
 def setup(bot):

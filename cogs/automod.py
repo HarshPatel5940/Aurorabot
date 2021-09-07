@@ -36,7 +36,7 @@ class Automod(commands.Cog):
                 await message.channel.send(
                     f"{message.author.mention} No invite Links allowed! <a:Red_alert:863017113581256715> Repeating this will Cause in a Mute.")
                 embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
-                                      description=f"reason : Sent Invite link", color=0xe70d0d)
+                                      description=f"reason : Sent Invite link", colour=discord.Color.red())
                 log_channel = self.client.get_channel(863000643303374920)
                 await log_channel.send(embed=embed)
 
@@ -47,7 +47,7 @@ class Automod(commands.Cog):
                 await message.reply(
                     f"{message.author.mention} Don't send messages with multiple lines! <a:Red_alert:863017113581256715> Repeating this will Cause in a Mute.")
                 embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
-                                      description=f"reason : Sent Multiple lines in a single message", color=0xe70d0d)
+                                      description=f"reason : Sent Multiple lines in a single message", colour=discord.Color.red())
                 log_channel = self.client.get_channel(863000643303374920)
                 await log_channel.send(embed=embed)
 
@@ -64,7 +64,7 @@ class Automod(commands.Cog):
                     await message.channel.send(
                         f"{message.author.mention} No bad words Allowed Here.<a:Red_alert:863017113581256715> Repeating this will Cause in a Mute.")
                     embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
-                                          description=f"reason : Used bad word ||{words}||", color=0xe70d0d)
+                                          description=f"reason : Used bad word ||{words}||", colour=discord.Color.red())
                     log_channel = self.client.get_channel(863000643303374920)
                     await log_channel.send(embed=embed)
 
@@ -77,7 +77,7 @@ class Automod(commands.Cog):
                 role = discord.utils.get(message.guild.roles, name="Muted")
                 await message.author.add_roles(role, reason="Automod muted Spamming")
                 embed = discord.Embed(title=f"AutoMod Muted {message.author.name}",
-                                      description=f"reason : Spamming", color=0xe70d0d)
+                                      description=f"reason : Spamming", colour=discord.Color.red())
                 log_channel = self.client.get_channel(863000643303374920)
                 await log_channel.send(embed=embed)
                 await asyncio.sleep(1)

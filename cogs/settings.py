@@ -45,7 +45,7 @@ class BotSettings(commands.Cog):
         This Command Is used to Reload all cogs
         """
         if cog == 'all':
-            embed = discord.Embed(title='Reloading Cogs...', description='', color=discord.Color.green())
+            embed = discord.Embed(title='Reloading Cogs...', description='', color=discord.Color.teal())
             extensions = [
                 "cogs.help",
                 "cogs.moderation",

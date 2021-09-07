@@ -38,12 +38,11 @@ async def uptime(ctx):
     current_time = time.time()
     difference = int(round(current_time - start_time))
     text = str(datetime.timedelta(seconds=difference))
-    embed = discord.Embed(colour=ctx.message.author.colour)
+    embed = discord.Embed(colour=discord.Color.green())
     embed.add_field(name="Uptime", value=text)
     embed.set_footer(text="FRNz Aurora Uptime")
-    await ctx.message.delete()
     try:
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
     except discord.HTTPException:
         await ctx.send("Current uptime: " + text)
 
