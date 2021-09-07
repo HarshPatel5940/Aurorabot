@@ -1,5 +1,4 @@
 from datetime import datetime
-import asyncio
 import pytz
 import discord
 from discord.ext import commands
@@ -20,7 +19,9 @@ class Events(commands.Cog):
         if message.author.id == self.client.user.id:
             return
         if not message.guild:
-
+            await message.reply("<a:Red_alert:863017113581256715> **For Any Assistance create ticket in <#861641048224038963>** <a:Red_alert:863017113581256715>")
+            await message.channel.send("If Urgent ping any staff in ticket")
+            """
             if len(message.content) < 10:
                 await message.channel.send(
                     "Your message should be at least 10 characters in length to be sent to Staff.")
@@ -51,10 +52,11 @@ class Events(commands.Cog):
                 await asyncio.sleep(1)
                 await message.channel.send(embed=embed2)
                 return
-        else:
+            """
             pass
-        if message.content.lower() == "help commands":
-            await message.channel.send(f"Hey! why don't you run the help command `>help`")
+
+        if message.content == "<@!854230635425693756>":
+            await message.reply("My Prefix is `>`, try running `>help`")
 
         elif message.content.lower() == "hi":
             await message.channel.send(f"Hey {message.author.mention} Wat's Up?")

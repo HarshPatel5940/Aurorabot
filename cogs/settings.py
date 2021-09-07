@@ -47,14 +47,14 @@ class BotSettings(commands.Cog):
         if cog == 'all':
             embed = discord.Embed(title='Reloading Cogs...', description='', color=discord.Color.green())
             extensions = [
-                "cogs.events",
+                "cogs.help",
                 "cogs.moderation",
-                "cogs.settings",
-                "cogs.invites",
-                "cogs.automod",
-                "cogs.stats",
                 "cogs.other",
-                "cogs.help"
+                "cogs.settings",
+                "cogs.stats",
+                "cogs.events",
+                "cogs.invites",
+                "cogs.automod"
             ]
             for i in extensions:
                 self.client.reload_extension(i)
