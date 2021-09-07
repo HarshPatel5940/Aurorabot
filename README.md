@@ -5,8 +5,8 @@
 1) Bot Prefix: `>`
 2) Bot Version: 9.4 
 3) Python Version: 3.9.1 
-4) Discord.Py Version 2.0.0
-
+4) Discord.Py Version: 2.0.0
+5) Bot Server Link: [FRNz Official Server]( https://discord.gg/kbb3tG3BPz)
 ## Features
 
 #### invite Tracking system
