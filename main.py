@@ -30,7 +30,7 @@ async def on_ready():
     # stuff
     print("Bot is alive")
 
-version = "9.4"
+version = "9.5"
 
 
 @client.command()
