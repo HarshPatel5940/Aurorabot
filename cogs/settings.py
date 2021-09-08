@@ -2,7 +2,7 @@ import io
 import textwrap
 import traceback
 from contextlib import redirect_stdout
-from lib.db import db
+# from lib.db import db
 import discord
 from discord.ext import commands
 from datetime import datetime as dt
@@ -28,20 +28,20 @@ class BotSettings(commands.Cog):
         await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening,
                                                                     name='PunisherYT'))
 
-    @commands.command(name="prefix")
-    @commands.has_permissions(manage_guild=True)
-    async def change_prefix(self, ctx, new: str):
-        if len(new) > 5:
-            await ctx.send("The prefix can not be more than 5 characters in length.")
-
-        else:
-            db.execute("UPDATE guilds SET Prefix = ? WHERE GuildID = ?", new, ctx.guild.id)
-            await ctx.send(f"Prefix set to {new}.")
-
-    @change_prefix.error
-    async def change_prefix_error(self, ctx, exc):
-        if isinstance(exc, commands.CheckFailure):
-            await ctx.send("You need the Manage Server permission to do that.")
+    # @commands.command(name="prefix")
+    # @commands.has_permissions(manage_guild=True)
+    # async def change_prefix(self, ctx, new: str):
+    #     if len(new) > 5:
+    #         await ctx.send("The prefix can not be more than 5 characters in length.")
+    #
+    #     else:
+    #         db.execute("UPDATE guilds SET Prefix = ? WHERE GuildID = ?", new, ctx.guild.id)
+    #         await ctx.send(f"Prefix set to {new}.")
+    #
+    # @change_prefix.error
+    # async def change_prefix_error(self, ctx, exc):
+    #     if isinstance(exc, commands.CheckFailure):
+    #         await ctx.send("You need the Manage Server permission to do that.")
 
     @staticmethod
     def cleanup_code(content):
