@@ -5,6 +5,7 @@ from datetime import datetime
 from main import version
 from typing import Optional
 
+
 class Stats(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -70,7 +71,6 @@ class Stats(commands.Cog):
         mem1 = self.client.get_user(854230635425693756)
         embed = discord.Embed(
             title=f"{mem1.name} Stats ",
-            description=" **Prefix is >**",
             colour=discord.Color.blurple(),
             timestamp=datetime.utcnow(),)
 

@@ -6,18 +6,25 @@ from pathlib import Path
 from cogs.help import HelpCommand
 import discord
 from discord.ext import commands
-
+from discord.ext.commands import when_mentioned_or
+from lib.db import db
 start_time = time.time()
+
+
+def get_prefix(bot, message):
+    prefix = db.field("SELECT Prefix FROM guilds WHERE GuildID = ?", message.guild.id)
+    return when_mentioned_or(prefix)(bot, message)
 
 # client
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix='>', case_insensitive=True, owner_ids=[448740493468106753, 798584468998586388],
-                      intents=intents, help_command=HelpCommand())
-
+client = commands.Bot(command_prefix=get_prefix,
+                      case_insensitive=True,
+                      owner_ids=[448740493468106753, 798584468998586388],
+                      intents=intents,
+                      help_command=HelpCommand())
 
 cwd = Path(__file__).parents[0]
 cwd = str(cwd)
-print(f"{cwd}\n-----")
 
 with open("secret.json") as f:
     data = json.load(f)

@@ -123,7 +123,7 @@ class Moderation(commands.Cog):
             overwrites = {
                 ctx.guild.default_role: discord.PermissionOverwrite(view_channel=None)
             }
-            await channel.edit(overwrites=overwrites, reason=f"channel made private by {ctx.author}")
+            await channel.edit(overwrites=overwrites, reason=f"channel made public by {ctx.author}")
             await ctx.send(f":white_check_mark: {channel.mention} is Now public")
         elif (
                 channel.overwrites[ctx.guild.default_role].view_channel is False):

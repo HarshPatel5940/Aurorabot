@@ -49,7 +49,7 @@ class Invites(commands.Cog):
         embed1 = discord.Embed(
             title=f"Welcome To FRNz Official Server.",
             description=f"**Member :** {member.mention}\n **Invited by: {inviter.name}#{inviter.discriminator}**",
-            color=discord.Color.teal(),
+            color=discord.Color.green(),
             timestamp=datetime.now(self.IST)
         )
         embed1.set_thumbnail(url=member.avatar.url)
