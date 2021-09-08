@@ -1,5 +1,5 @@
 # AURORABOT
-#### OFFICIAL REPOSITORY OF FRNz Official Bot
+#### OFFICIAL REPOSITORY OF FRNz Aurora Bot
 
 ## Bot stats
 1) Bot Prefix: `>`
