@@ -10,3 +10,4 @@ yarl
 aiohttp
 chardet
 setuptools
+asyncpg

@@ -1,6 +1,7 @@
 from datetime import datetime
-import pytz
+
 import discord
+import pytz
 from discord.ext import commands
 
 
@@ -19,7 +20,8 @@ class Events(commands.Cog):
         if message.author.id == self.client.user.id:
             return
         if not message.guild:
-            await message.reply("<a:Red_alert:863017113581256715> **For Any Assistance create ticket in <#861641048224038963>** <a:Red_alert:863017113581256715>")
+            await message.reply(
+                "<a:Red_alert:863017113581256715> **For Any Assistance create ticket in <#861641048224038963>** <a:Red_alert:863017113581256715>")
             await message.channel.send("If Urgent ping any staff in ticket")
             """
             if len(message.content) < 10:
@@ -34,12 +36,12 @@ class Events(commands.Cog):
                     timestamp=datetime.now(self.IST)
                 )
                 embed.add_field(name=f"reply with >dm {message.author.id}", value="Reply to ur member", inline=False)
-
+    
                 embed.set_thumbnail(url=message.author.avatar.url)
-
+    
                 log_channel = self.client.get_channel(863000430203895808)
                 await log_channel.send(embed=embed)
-
+    
                 embed2 = discord.Embed(
                     title="Message Has Been Sent ",
                     description="<a:Red_alert:863017113581256715> Message Has Been Sent to Staff Successfully <a:Red_alert:863017113581256715>\nStaff Will Contact You as soon as possible\nreplying to this message or sending message will create a new ticket\n\n**If you need to send a image or attachment pls send the link of attachment with the message**",
@@ -53,7 +55,7 @@ class Events(commands.Cog):
                 await message.channel.send(embed=embed2)
                 return
             """
-            pass
+            return
 
         if message.content == "<@!854230635425693756>":
             await message.reply("My Prefix is `>`, try running `>help`")
@@ -162,7 +164,7 @@ class Events(commands.Cog):
         try:
             if not message.author.bot:
                 embed = discord.Embed(title="Message deletion",
-                                      description=f"Action by {message.author.display_name}.",
+                                      description=f"Edit by {message.author.name} , id = {message.author.id}",
                                       colour=discord.Color.orange(),
                                       timestamp=datetime.now(self.IST))
                 embed.add_field(name="member id : ", value=f"-{message.author.id}")

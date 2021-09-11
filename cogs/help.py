@@ -1,5 +1,5 @@
-from datetime import datetime
-
+import datetime
+import time
 import discord
 from discord.ext import commands
 
@@ -20,6 +20,19 @@ class BotInfo(commands.Cog):
 
         await ctx.reply(embed=embed)
 
+    @commands.command()
+    async def uptime(self, message):
+        current_time = time.time()
+        difference = int(round(current_time - self.bot.start_time))
+        text = str(datetime.timedelta(seconds=difference))
+        embed = discord.Embed(colour=discord.Color.green())
+        embed.add_field(name="Uptime", value=text)
+        embed.set_footer(text="FRNz Aurora Uptime")
+        try:
+            await message.reply(embed=embed)
+        except discord.HTTPException:
+            await message.send("Current uptime: " + text)
+
 
 def setup(bot):
     bot.add_cog(BotInfo(bot=bot))
@@ -35,7 +48,7 @@ class HelpCommand(commands.DefaultHelpCommand):
 
     async def send_bot_help(self, mapping):
         embed = discord.Embed(title=f"{self.context.me.name} Help", description="", color=discord.Color.blurple(),
-                              timestamp=datetime.utcnow())
+                              timestamp=datetime.datetime.utcnow())
         for cog, command in mapping.items():
             filtered = await self.filter_commands(commands=command)
             cog_name = getattr(cog, 'qualified_name', "No Category")
@@ -51,7 +64,7 @@ class HelpCommand(commands.DefaultHelpCommand):
         if command.hidden:
             return
         embed = discord.Embed(title=command.qualified_name, description=command.help,
-                              color=discord.Color.blurple(), timestamp=datetime.utcnow())
+                              color=discord.Color.blurple(), timestamp=datetime.datetime.utcnow())
         embed.add_field(name='Usage',
                         value=f"**{self.context.prefix}{command.name} {command.signature}**\n{command.brief if command.brief is not None else ''}")
         if command.aliases != []:

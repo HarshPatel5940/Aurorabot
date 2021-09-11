@@ -7,10 +7,10 @@ import pytz
 
 
 class Invites(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
         self.IST = pytz.timezone('Asia/Kolkata')
-        self.tracker = DiscordUtils.InviteTracker(client)
+        self.tracker = DiscordUtils.InviteTracker(bot)
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -43,9 +43,9 @@ class Invites(commands.Cog):
         if inviter is None:
             inviter.name = "Inviter Not Found"
             inviter.discriminator = " Link deleted "
-        general = self.client.get_channel(799974968921292812)
-        channel = self.client.get_channel(799978267293646868)
-        guild = self.client.get_guild(799974967504535572)
+        general = self.bot.get_channel(799974968921292812)
+        channel = self.bot.get_channel(799978267293646868)
+        guild = self.bot.get_guild(799974967504535572)
         embed1 = discord.Embed(
             title=f"Welcome To FRNz Official Server.",
             description=f"**Member :** {member.mention}\n **Invited by: {inviter.name}#{inviter.discriminator}**",
@@ -81,7 +81,7 @@ class Invites(commands.Cog):
     @commands.Cog.listener()
     async def on_member_remove(self, member):
 
-        channel = self.client.get_channel(799978817459453963)
+        channel = self.bot.get_channel(799978817459453963)
 
         embed = discord.Embed(
             title="A Member Just Left :( ",
@@ -95,5 +95,5 @@ class Invites(commands.Cog):
         await channel.send(embed=embed)
 
 
-def setup(client):
-    client.add_cog(Invites(client))
+def setup(bot):
+    bot.add_cog(Invites(bot))

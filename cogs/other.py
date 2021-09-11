@@ -4,8 +4,8 @@ import typing
 
 
 class Others(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -75,5 +75,5 @@ class Others(commands.Cog):
         await ctx.message.add_reaction("✅")
 
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Others(bot))

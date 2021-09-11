@@ -3,7 +3,7 @@
 
 ## Bot stats
 1) Bot Prefix: `>`
-2) Bot Version: 10.1
+2) Bot Version: 10.3
 3) Python Version: 3.9.1 
 4) Discord.Py Version: 2.0.0
 5) Bot Server Link: [FRNz Official Server]( https://discord.gg/kbb3tG3BPz)

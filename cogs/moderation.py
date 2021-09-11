@@ -4,8 +4,8 @@ from asyncio import sleep
 
 
 class Moderation(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -157,7 +157,7 @@ class Moderation(commands.Cog):
 
         await member.add_roles(role, reason=f"Muted by:{ctx.author}, reason: {reason}")
         await ctx.send(f"**{member.name}#{member.discriminator} Has Been Muted**")
-        channel = self.client.get_channel(863000643303374920)
+        channel = self.bot.get_channel(863000643303374920)
         embed = discord.Embed(title=f"{ctx.author.name} Muted: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
         await channel.send(embed=embed)
 
@@ -176,7 +176,7 @@ class Moderation(commands.Cog):
             await member.remove_roles(role, reason=f"Unmuted by:{ctx.author}, reason: {reason}")
 
             await ctx.send(f"**{member.display_name}#{member.discriminator} Has Been Unmuted**")
-            channel = self.client.get_channel(863000643303374920)
+            channel = self.bot.get_channel(863000643303374920)
             embed = discord.Embed(title=f"{ctx.author.name} unmuted: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
             await channel.send(embed=embed)
 
@@ -198,7 +198,7 @@ class Moderation(commands.Cog):
 
         await ctx.guild.kick(user=member, reason=f"kick by:{ctx.author}, reason: {reason}")
         embed = discord.Embed(title=f"{ctx.author.name} kicked: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
-        log_channel = self.client.get_channel(863000643303374920)
+        log_channel = self.bot.get_channel(863000643303374920)
         await log_channel.send(embed=embed)
         await ctx.send(f"**{member.name} Has Been Kicked!**")
 
@@ -221,7 +221,7 @@ class Moderation(commands.Cog):
         await ctx.guild.ban(user=member, reason=f"Banned by:{ctx.author}, reason: {reason}")
 
         embed = discord.Embed(title=f"{ctx.author.name} banned: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
-        log_channel = self.client.get_channel(863000643303374920)
+        log_channel = self.bot.get_channel(863000643303374920)
         await log_channel.send(embed=embed)
         await sleep(1)
         await ctx.send(f"**{member.name}** Has Been Banned!")
@@ -238,11 +238,11 @@ class Moderation(commands.Cog):
         embed = discord.Embed(title="Unban Case", description=bandec)
 
         embed = discord.Embed(title=f"{ctx.author.name} banned: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
-        log_channel = self.client.get_channel(863000643303374920)
+        log_channel = self.bot.get_channel(863000643303374920)
         await log_channel.send(embed=embed)
         await sleep(1)
         await ctx.send(f"**{member.name}** Has Been Unbanned!")
 
 
-def setup(client):
-    client.add_cog(Moderation(client))
+def setup(bot):
+    bot.add_cog(Moderation(bot))

@@ -1,52 +1,96 @@
-import datetime
+import asyncio
 import json
-import os
 import time
-from cogs.help import HelpCommand
+import traceback
+
+import asyncpg
 import discord
 from discord.ext import commands
-from discord.ext.commands import when_mentioned_or
-start_time = time.time()
 
-# client
-intents = discord.Intents.all()
-client = commands.Bot(command_prefix=when_mentioned_or('>'),
-                      case_insensitive=True,
-                      owner_ids=[448740493468106753, 798584468998586388],
-                      intents=intents,
-                      help_command=HelpCommand())
+import secret
+from cogs.help import HelpCommand
 
-with open("secret.json") as f:
-    data = json.load(f)
-    client.config_token = data["token"]
-    f.close()
-
-
-@client.event
-async def on_ready():
-    # stuff
-    print("Bot is alive")
-
-version = "10.1"
+initial_cogs = [
+    "automod",
+    "help",
+    "moderation",
+    "invites",
+    "settings",
+    "stats",
+    "events",
+    "other"
+]
 
 
-@client.command()
-async def uptime(ctx):
-    current_time = time.time()
-    difference = int(round(current_time - start_time))
-    text = str(datetime.timedelta(seconds=difference))
-    embed = discord.Embed(colour=discord.Color.green())
-    embed.add_field(name="Uptime", value=text)
-    embed.set_footer(text="FRNz Aurora Uptime")
-    try:
-        await ctx.reply(embed=embed)
-    except discord.HTTPException:
-        await ctx.send("Current uptime: " + text)
+def prefix(self, message):
+    if not message.guild:
+        return commands.when_mentioned_or('>')(self, message)
+    else:
+        prefix1 = self.prefix[message.guild.id]
+        return commands.when_mentioned_or(prefix1)(self, message)
+
+
+async def setup_db():
+    def _encode_jsonb(value):
+        return json.dumps(value)
+
+    def _decode_jsonb(value):
+        return json.loads(value)
+
+    async def init(con):
+        await con.set_type_codec(
+            "jsonb",
+            schema="pg_catalog",
+            encoder=_encode_jsonb,
+            decoder=_decode_jsonb,
+            format="text",
+        )
+
+    return await asyncpg.create_pool(secret.db_url, init=init, max_size=3, min_size=1)
+
+
+class AuroraBot(commands.Bot):
+    def __init__(self, db) -> None:
+        super().__init__(command_prefix=prefix,
+                         intents=discord.Intents.all(),
+                         case_insensitive=True,
+                         strip_after_prefix=True,
+                         activity=discord.Activity(type=discord.ActivityType.watching, name="Gallant Asia Members"),
+                         owner_ids=[562487094543384578, 448740493468106753],
+                         help_command=HelpCommand())
+        self.start_time = time.time()
+        self.db = db
+        self.version = 10.2
+        self.prefix = {}
+        self.ready = False
+
+    async def on_ready(self):
+        if self.ready:
+            return
+        print("Logged In!")
+        self.ready = True
+
+    @classmethod
+    async def setup(cls):
+        db = await setup_db()
+        self = cls(db)
+
+        query = """SELECT * FROM guild"""
+        fetch = await self.db.fetch(query)
+        self.prefix = {n['server_id']: n['prefix'] for n in fetch}
+
+        for e in initial_cogs:
+            try:
+                self.load_extension(f"cogs.{e}")
+            except Exception:
+                traceback.print_exc()
+
+        try:
+            await self.start(secret.token)
+        except KeyboardInterrupt:
+            await self.close()
 
 
 if __name__ == "__main__":
-    for file in os.listdir("cogs"):
-        if file.endswith(".py") and not file.startswith("_"):
-            client.load_extension(f"cogs.{file[:-3]}")
-
-    client.run(client.config_token)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(AuroraBot.setup())

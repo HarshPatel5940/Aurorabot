@@ -1,14 +1,14 @@
-import discord
-from discord.ext import commands
 import platform
 from datetime import datetime
-from main import version
 from typing import Optional
+
+import discord
+from discord.ext import commands
 
 
 class Stats(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -17,7 +17,7 @@ class Stats(commands.Cog):
     @commands.command(name="emojiinfo", aliases=["ei"])
     async def emoji_info(self, ctx, emoji: discord.Emoji = None):
         if not emoji:
-            return await ctx.invoke(self.client.get_command("help"), entity="emojiinfo")
+            return await ctx.invoke(self.bot.get_command("help"), entity="emojiinfo")
 
         try:
             emoji = await emoji.guild.fetch_emoji(emoji.id)
@@ -66,24 +66,24 @@ class Stats(commands.Cog):
         """
         pythonVersion = platform.python_version()
         dpyVersion = discord.__version__
-        serverCount = len(self.client.guilds)
-        memberCount = len(set(self.client.get_all_members()))
-        mem1 = self.client.get_user(854230635425693756)
+        serverCount = len(self.bot.guilds)
+        memberCount = len(set(self.bot.get_all_members()))
+        mem1 = self.bot.get_user(854230635425693756)
         embed = discord.Embed(
             title=f"{mem1.name} Stats ",
             colour=discord.Color.blurple(),
-            timestamp=datetime.utcnow(),)
+            timestamp=datetime.utcnow(), )
 
-        embed.add_field(name="Bot Version:", value=version)
+        embed.add_field(name="Bot Version:", value=self.bot.version)
         embed.add_field(name="Python Version:", value=pythonVersion)
         embed.add_field(name="Discord.Py Version", value=dpyVersion)
         embed.add_field(name="Total Guilds:", value=serverCount)
         embed.add_field(name="Total Users:", value=memberCount)
         embed.add_field(name="Bot Made By:", value="<@448740493468106753>")
 
-        embed.set_footer(text=f"{message.guild.name} | {self.client.user.name}")
-        embed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar.url)
-        embed.set_thumbnail(url=self.client.user.avatar.url)
+        embed.set_footer(text=f"{message.guild.name} | {self.bot.user.name}")
+        embed.set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
+        embed.set_thumbnail(url=self.bot.user.avatar.url)
         await message.channel.send(embed=embed)
 
     @commands.command(name="userinfo", aliases=["ui", "memberinfo", "mi", "whois"])
@@ -99,7 +99,8 @@ class Stats(commands.Cog):
         embed.add_field(name="ID", value=f"{member1.id}", inline=False)
         embed.add_field(name="Name", value=f"{member1.name}#{member1.discriminator}")
         embed.add_field(name="Top role", value=f"{member1.top_role.mention}")
-        embed.add_field(name="status", value=f"{str(member1.activity.type).split('.') if member1.activity else 'N/A'} {member1.activity.name if member1.activity else ''}")
+        embed.add_field(name="status",
+                        value=f"{str(member1.activity.type).split('.') if member1.activity else 'N/A'} {member1.activity.name if member1.activity else ''}")
         embed.add_field(name="created at", value=f"{member1.created_at.strftime('%d/%m/%y %H:%M:%S')}")
         embed.add_field(name="Joined at", value=f"{member1.joined_at.strftime('%d/%m/%y %H:%M:%S')}")
         embed.add_field(name="Boosted?", value=f"{member1.premium_since}")
@@ -156,7 +157,7 @@ class Stats(commands.Cog):
                     len(list(filter(lambda m: str(m.status) == "dnd", ctx.guild.members))),
                     len(list(filter(lambda m: str(m.status) == "offline", ctx.guild.members)))]
 
-        fields = [("Owner & owner id",f"{ctx.guild.owner}, {ctx.guild.owner.id}", False),
+        fields = [("Owner & owner id", f"{ctx.guild.owner}, {ctx.guild.owner.id}", False),
                   ("Server ID", ctx.guild.id, True),
                   ("Created at", ctx.guild.created_at.strftime("%d/%m/%Y %H:%M:%S"), True),
                   ("Region", ctx.guild.region, True),
@@ -178,5 +179,5 @@ class Stats(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(client):
-    client.add_cog(Stats(client))
+def setup(bot):
+    bot.add_cog(Stats(bot))
