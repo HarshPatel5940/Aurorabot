@@ -35,7 +35,7 @@ class BotSettings(commands.Cog):
             await ctx.send("The prefix can not be more than 5 characters in length.")
 
         else:
-            await self.bot.db.execute("UPDATE guilds SET prefix = ? WHERE server_id = ?", new, ctx.guild.id)
+            await self.bot.db.execute("UPDATE guild SET prefix = $1 WHERE server_id = $2", new, ctx.guild.id)
             self.bot.prefix[ctx.guild.id] = new
             await ctx.send(f"Prefix set to {new}.")
 

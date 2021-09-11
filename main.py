@@ -11,14 +11,14 @@ import secret
 from cogs.help import HelpCommand
 
 initial_cogs = [
-    "automod",
     "help",
     "moderation",
-    "invites",
+    "other",
     "settings",
     "stats",
     "events",
-    "other"
+    "invites",
+    "automod"
 ]
 
 
@@ -60,7 +60,7 @@ class AuroraBot(commands.Bot):
                          help_command=HelpCommand())
         self.start_time = time.time()
         self.db = db
-        self.version = 10.2
+        self.version = 10.3
         self.prefix = {}
         self.ready = False
 
