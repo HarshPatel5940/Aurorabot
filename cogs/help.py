@@ -76,4 +76,12 @@ class HelpCommand(commands.DefaultHelpCommand):
         pass
 
     async def send_group_help(self, group):
-        pass
+        embed = discord.Embed(title=group.qualified_name, description=group.short_doc,
+                              color=discord.Color.blurple(), timestamp=datetime.datetime.utcnow())
+        subcommands = ""
+        for i in group.commands:
+            subcommands += f"```\n{self.context.prefix}{command.name} {command.signature}\n```"
+        embed.add_field(name='Subcommamds',
+                        value="..." if subcommands == "" else subcommands)
+        embed.set_footer(text="[] - optional, <> - required")
+        await self.send(embed=embed)
