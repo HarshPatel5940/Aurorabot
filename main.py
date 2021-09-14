@@ -18,7 +18,8 @@ initial_cogs = [
     "stats",
     "events",
     "invites",
-    "automod"
+    "automod",
+    "clan"
 ]
 
 
@@ -55,13 +56,13 @@ class AuroraBot(commands.Bot):
                          intents=discord.Intents.all(),
                          case_insensitive=True,
                          strip_after_prefix=True,
-                         activity=discord.Activity(type=discord.ActivityType.watching, name="Gallant Asia Members"),
-                         owner_ids=[562487094543384578, 448740493468106753],
+                         owner_ids=[798584468998586388, 448740493468106753],
                          help_command=HelpCommand())
         self.start_time = time.time()
         self.db = db
-        self.version = 10.3
+        self.version = 10.5
         self.prefix = {}
+        self.clan = {}
         self.ready = False
 
     async def on_ready(self):
@@ -78,6 +79,10 @@ class AuroraBot(commands.Bot):
         query = """SELECT * FROM guild"""
         fetch = await self.db.fetch(query)
         self.prefix = {n['server_id']: n['prefix'] for n in fetch}
+
+        query = """SELECT * FROM clan"""
+        fetch = await self.db.fetch(query)
+        self.clan = {n['member_id']: n['rank'] for n in fetch}
 
         for e in initial_cogs:
             try:

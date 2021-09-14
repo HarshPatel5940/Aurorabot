@@ -29,7 +29,7 @@ class BotSettings(commands.Cog):
                                                                     name='PunisherYT'))
 
     @commands.command(name="prefix")
-    @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions(administrator=True)
     async def change_prefix(self, ctx, new: str):
         if len(new) > 5:
             await ctx.send("The prefix can not be more than 5 characters in length.")
@@ -226,9 +226,9 @@ class BotSettings(commands.Cog):
         is_multistatement = query.count(';') > 1
         if is_multistatement:
             # fetch does not support multiple statements
-            strategy = ctx.db.execute
+            strategy = self.bot.db.execute
         else:
-            strategy = ctx.db.fetch
+            strategy = self.bot.db.fetch
 
         try:
             start = time.perf_counter()
