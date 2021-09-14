@@ -25,8 +25,6 @@ class BotSettings(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
-        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening,
-                                                                    name='PunisherYT'))
 
     @commands.command(name="prefix")
     @commands.has_permissions(administrator=True)
@@ -70,7 +68,8 @@ class BotSettings(commands.Cog):
                 "cogs.stats",
                 "cogs.events",
                 "cogs.invites",
-                "cogs.automod"
+                "cogs.automod",
+                "cogs.clan"
             ]
             for i in extensions:
                 self.bot.reload_extension(i)
@@ -81,7 +80,7 @@ class BotSettings(commands.Cog):
 
         await ctx.send(f"{cog} reloaded successfully.")
 
-    @commands.command(hidden=True)
+    @commands.command()
     @commands.is_owner()
     async def load(self, ctx, cog):
         """
@@ -90,7 +89,7 @@ class BotSettings(commands.Cog):
         self.bot.load_extension(f"cogs.{cog}")
         await ctx.send(f"{cog} unloaded successfully.")
 
-    @commands.command(hidden=True)
+    @commands.command()
     @commands.is_owner()
     async def unload(self, ctx, cog):
         """

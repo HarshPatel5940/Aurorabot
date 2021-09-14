@@ -15,6 +15,7 @@ class Clan(commands.Cog):
     @commands.group(name="clan")
     @commands.has_permissions(administrator=True)
     async def clan(self, message):
+        """GROUP COMMAND"""
         pass
 
     @clan.command(name='add')

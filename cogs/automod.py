@@ -57,8 +57,8 @@ class Automod(commands.Cog):
                 await log_channel.send(embed=embed)
 
             if len(message.mentions) > 8:
-                #if message.author.guild_permissions.manage_messages:
-                        #return
+                if message.author.guild_permissions.manage_messages:
+                        return
                 await message.delete()
                 await message.channel.send(
                     f"{message.author.mention} Don't Mass Mention! You Have Been Muted in Server for 5m")
@@ -107,6 +107,7 @@ class Automod(commands.Cog):
                     f"{message.author.mention} Don't spam Messages! You Have Been Muted in Server for 5m")
                 await asyncio.sleep(300)
                 await message.author.remove_roles(role, reason="Automatic unmute for spam")
+
 
 def setup(bot):
     bot.add_cog(Automod(bot))
