@@ -17,6 +17,7 @@
    >2) Anti multiple message Spam
    >3) Anti Long Message spam
    >4) Anti New lines spam
+   >5) Anti Mention Spam
 #### Moderation Commands
    >1) Mute & Unmute
    >2) kick, ban & Unban
