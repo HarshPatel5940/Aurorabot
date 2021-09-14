@@ -154,6 +154,7 @@ class Events(commands.Cog):
 
                 for name, value, inline in fields:
                     embed.add_field(name=name, value=value, inline=inline)
+                embed.add_field(name = "Message link", value = f"[click here]({after.jump_url})")
                 log_channel = self.client.get_channel(863000479889096724)
                 await log_channel.send(embed=embed)
         except:

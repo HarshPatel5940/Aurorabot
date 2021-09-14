@@ -56,14 +56,29 @@ class Automod(commands.Cog):
                 log_channel = self.bot.get_channel(863000643303374920)
                 await log_channel.send(embed=embed)
 
+
+            if len(message.mentions) > 8:
+                #if message.author.guild_permissions.manage_messages:
+                        #return
+                await message.delete()
+                await message.channel.send(
+                    f"{message.author.mention} Don't Mass Mention! You Have Been Muted in Server for 5m")
+                role = discord.utils.get(message.guild.roles, name="Muted")
+                await message.author.add_roles(role, reason="Automod muted for Mass Mention (5m)")
+                embed = discord.Embed(title=f"AutoMod Muted {message.author.name}",
+                                      description=f"reason : Spamming", colour=discord.Color.red())
+                log_channel = self.bot.get_channel(863000643303374920)
+                await log_channel.send(embed=embed)
+                await asyncio.sleep(300)
+                await message.author.remove_roles(role, reason="Automatic unmute for spam")
+
+
             bad_words = ["fuck", "bitch", "madharbhakt", "nigger", "nigga", "b#tch", "fuker",
                          "laude", "nude", "sex", "chutiye", "madarchod", "bhienchod", "madarbhakt", "porn"]
 
             for words in bad_words:
                 if words in message.content.lower():
                     if message.author.guild_permissions.manage_messages:
-                        await message.channel.send(f"{message.author.mention} Ik you are staff pls mind ur language",
-                                                   delete_after=5)
                         return
                     try:
                         await message.delete()
