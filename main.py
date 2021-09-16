@@ -52,7 +52,7 @@ async def setup_db():
 
 class AuroraBot(commands.Bot):
     def __init__(self, db) -> None:
-        super().__init__(command_prefix='--',
+        super().__init__(command_prefix=prefix,
                          intents=discord.Intents.all(),
                          activity=discord.Activity(type=discord.ActivityType.listening, name='PunisherYT'),
                          case_insensitive=True,
