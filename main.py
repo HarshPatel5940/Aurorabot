@@ -61,7 +61,7 @@ class AuroraBot(commands.Bot):
                          help_command=HelpCommand())
         self.start_time = time.time()
         self.db = db
-        self.version = 10.5
+        self.version = 10.7
         self.prefix = {}
         self.clan = {}
         self.ready = False
