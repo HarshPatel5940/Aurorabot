@@ -74,7 +74,7 @@ class Invites(commands.Cog):
         try:
             await member.send(x1, embed=embed2)
         except:
-            await general.send(x3, embed2)
+            await general.send(x3, embed=embed2)
         await asyncio.sleep(1)
         await channel.send(embed=embed1)
 

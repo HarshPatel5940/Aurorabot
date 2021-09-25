@@ -47,7 +47,7 @@ async def setup_db():
             format="text",
         )
 
-    return await asyncpg.create_pool(secret.db_url, init=init, max_size=3, min_size=1)
+    return await asyncpg.create_pool(secret.db_url, init=init, max_size=4, min_size=1)
 
 
 class AuroraBot(commands.Bot):
@@ -61,7 +61,7 @@ class AuroraBot(commands.Bot):
                          help_command=HelpCommand())
         self.start_time = time.time()
         self.db = db
-        self.version = 10.7
+        self.version = 10.8
         self.prefix = {}
         self.clan = {}
         self.ready = False
