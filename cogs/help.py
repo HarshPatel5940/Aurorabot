@@ -18,10 +18,10 @@ class BotInfo(commands.Cog):
                               description=f"Pong! :ping_pong: \nResponse Time: {round(self.bot.latency * 1000)}ms",
                               color=discord.Color.blurple())
 
-        await ctx.reply(embed=embed)
+        await ctx.send(embed=embed)
 
     @commands.command()
-    async def uptime(self, message):
+    async def uptime(self, ctx):
         current_time = time.time()
         difference = int(round(current_time - self.bot.start_time))
         text = str(datetime.timedelta(seconds=difference))
@@ -29,7 +29,7 @@ class BotInfo(commands.Cog):
         embed.add_field(name="Uptime", value=text)
         embed.set_footer(text="FRNz Aurora Uptime")
         try:
-            await message.reply(embed=embed)
+            await ctx.send(embed=embed)
         except discord.HTTPException:
             await message.send("Current uptime: " + text)
 

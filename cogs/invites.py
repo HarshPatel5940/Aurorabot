@@ -38,30 +38,35 @@ class Invites(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        inviter = await self.tracker.fetch_inviter(member)  # inviter is the member who invited
-
-        if inviter is None:
-            inviter.name = "Inviter Not Found"
-            inviter.discriminator = " Link deleted "
+        inviter = await self.tracker.fetch_inviter(member) 
         general = self.bot.get_channel(799974968921292812)
         channel = self.bot.get_channel(799978267293646868)
         guild = self.bot.get_guild(799974967504535572)
+        desc = f"**Member :** {member.mention}"
+        
+        if inviter is None:
+            desc = f"**Member :** {member.mention}\n **Invited by: Inviter not found**"
+        else:
+            desc = f"**Member :** {member.mention}\n **Invited by: {inviter.name}#{inviter.discriminator}**"
+
         embed1 = discord.Embed(
             title=f"Welcome To FRNz Official Server.",
-            description=f"**Member :** {member.mention}\n **Invited by: {inviter.name}#{inviter.discriminator}**",
+            description=desc,
             color=discord.Color.green(),
             timestamp=datetime.now(self.IST)
         )
+        embed1.add_field(f"account creation : {member1.created_at.strftime('%d/%m/%y %H:%M:%S')}")
         embed1.set_thumbnail(url=member.avatar.url)
         embed1.set_author(name=member.name, icon_url=member.avatar.url)
         embed1.set_footer(text=member.guild.name, icon_url=member.guild.icon.url)
+
         x1 = f"{member.mention} Welcome to our FRNz Official community"
+        x3 = f"{member.mention} Welcome to our FRNz Official community.\n since Dms off sent here"
         x2 = f"""
 <a:Heart:815506676533690390>You can promote your channel, videos  or blog in <#800291409726144513>
 <a:Heart:815506676533690390>Remember to Read Rules in <#799978440492449842>
 <a:Heart:815506676533690390>Take Self roles in <#799978698064265226>
 <a:Heart:815506676533690390>Have a great time here in {guild.name} """
-        x3 = f"{member.mention} Welcome to our FRNz Official community.\n since Dms off sent here"
         embed2 = discord.Embed(
             title="Welcome To FRNz Official Server",
             description=x2,

@@ -5,8 +5,6 @@ from discord.ext import commands
 class Clan(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # self.clan_channel = self.bot.get_channel(833302700678578197)
-        # self.message_emb = self.clan_channel.fetch_message(886577181193547826)
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -15,7 +13,7 @@ class Clan(commands.Cog):
     @commands.group(name="clan")
     @commands.has_permissions(administrator=True)
     async def clan(self, message):
-        """GROUP COMMAND"""
+        """Clan  Commands"""
         pass
 
     @clan.command(name='add')
@@ -88,7 +86,7 @@ class Clan(commands.Cog):
         message1 = await channel.fetch_message(886577181193547826)
 
         await message1.edit(doc)
-        await message.channel.send(":white_check_mark: **Clan Member database has Been UPDATED**")
+        await message.channel.send(":white_check_mark: Clan Member database has Been **UPDATED**")
 
     @clan.command(name='yt')
     async def yt(self, ctx):
