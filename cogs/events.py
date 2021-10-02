@@ -79,26 +79,30 @@ class Events(commands.Cog):
             embed = discord.Embed(title=f"Username change",
                                   colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :", value=f"{before.name} ({before.id})")
+            embed.add_field(name="Member name & id  :",
+                            value=f"{before.name} ({before.id})")
             fields = [("Before", before.name, False),
                       ("After", after.name, False)]
 
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
-            log_channel = self.bot.get_channel(self.bot.custom_logs[before.guild.id])
+            log_channel = self.bot.get_channel(
+                self.bot.custom_logs[before.guild.id])
             await log_channel.send(embed=embed)
 
         if before.discriminator != after.discriminator:
             embed = discord.Embed(title=f"Discriminator change",
                                   colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :", value=f"{before.name} ({before.id})")
+            embed.add_field(name="Member name & id  :",
+                            value=f"{before.name} ({before.id})")
             fields = [("Before", before.discriminator, False),
                       ("After", after.discriminator, False)]
 
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
-            log_channel = self.bot.get_channel(self.bot.custom_logs[before.guild.id])
+            log_channel = self.bot.get_channel(
+                self.bot.custom_logs[before.guild.id])
             await log_channel.send(embed=embed)
 
         if before.avatar.url != after.avatar.url:
@@ -106,10 +110,12 @@ class Events(commands.Cog):
                                   description="New image is below, old to the thumbnail.",
                                   colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :", value=f"{before.name} ({before.id})")
+            embed.add_field(name="Member name & id  :",
+                            value=f"{before.name} ({before.id})")
             embed.set_thumbnail(url=before.avatar.url)
             embed.set_image(url=after.avatar.url)
-            log_channel = self.bot.get_channel(self.bot.custom_logs[before.guild.id])
+            log_channel = self.bot.get_channel(
+                self.bot.custom_logs[before.guild.id])
             await log_channel.send(embed=embed)
 
     @commands.Cog.listener()
@@ -118,26 +124,30 @@ class Events(commands.Cog):
             embed = discord.Embed(title=f"Nickname change",
                                   colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :", value=f"{before.name} ({before.id})")
+            embed.add_field(name="Member name & id  :",
+                            value=f"{before.name} ({before.id})")
             fields = [("Before", before.display_name, False),
                       ("After", after.display_name, False)]
 
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
-            log_channel = self.bot.get_channel(self.bot.custom_logs[before.guild.id])
+            log_channel = self.bot.get_channel(
+                self.bot.custom_logs[before.guild.id])
             await log_channel.send(embed=embed)
 
         elif before.roles != after.roles:
             embed = discord.Embed(title=f"Role updates",
                                   colour=discord.Color.magenta(),
                                   timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :", value=f"{before.name} ({before.id})")
+            embed.add_field(name="Member name & id  :",
+                            value=f"{before.name} ({before.id})")
             fields = [("Before", ", ".join([r.mention for r in before.roles]), False),
                       ("After", ", ".join([r.mention for r in after.roles]), False)]
 
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
-            log_channel = self.bot.get_channel(self.bot.custom_logs[before.guild.id])
+            log_channel = self.bot.get_channel(
+                self.bot.custom_logs[before.guild.id])
             await log_channel.send(embed=embed)
 
     @commands.Cog.listener()
@@ -154,8 +164,10 @@ class Events(commands.Cog):
 
                 for name, value, inline in fields:
                     embed.add_field(name=name, value=value, inline=inline)
-                embed.add_field(name = "Message link", value = f"[click here]({after.jump_url})")
-                log_channel = self.bot.get_channel(self.bot.custom_logs[after.guild.id])
+                embed.add_field(name="Message link",
+                                value=f"[click here]({after.jump_url})")
+                log_channel = self.bot.get_channel(
+                    self.bot.custom_logs[after.guild.id])
                 await log_channel.send(embed=embed)
                 print()
         except:
@@ -169,14 +181,17 @@ class Events(commands.Cog):
                                       description=f"Member name & id : {message.author.name} ({message.author.id})",
                                       colour=discord.Color.orange(),
                                       timestamp=datetime.now(self.IST))
-                embed.add_field(name="member id : ", value=f"-{message.author.id}")
-                embed.add_field(name="channel : ", value=f"-{message.channel.mention}")
+                embed.add_field(name="member id : ",
+                                value=f"-{message.author.id}")
+                embed.add_field(name="channel : ",
+                                value=f"-{message.channel.mention}")
 
                 fields = [("Content", message.content, False)]
                 for name, value, inline in fields:
                     embed.add_field(name=name, value=value, inline=inline)
 
-                log_channel = self.bot.get_channel(self.bot.custom_logs[message.guild.id])
+                log_channel = self.bot.get_channel(
+                    self.bot.custom_logs[message.guild.id])
                 await log_channel.send(embed=embed)
         except Exception():
             raise Exception()

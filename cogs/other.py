@@ -48,7 +48,8 @@ class Others(commands.Cog):
         except:
             await ctx.send("The channel or ID mentioned was incorrect")
 
-        new_embed = discord.Embed(description=message, color=discord.Color.teal())
+        new_embed = discord.Embed(
+            description=message, color=discord.Color.teal())
         await msg1.edit(embed=new_embed)
         await ctx.message.add_reaction("✅")
 

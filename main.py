@@ -53,15 +53,15 @@ async def setup_db():
 class AuroraBot(commands.Bot):
     def __init__(self, db) -> None:
         super().__init__(command_prefix=prefix,
-                         intents=discord.Intents.all(),
-                         activity=discord.Activity(type=discord.ActivityType.listening, name='>help'),
-                         case_insensitive=True,
-                         strip_after_prefix=True,
-                         owner_ids=[798584468998586388, 448740493468106753],
-                         help_command=HelpCommand())
+                        intents=discord.Intents.all(),
+                        activity=discord.Activity(type=discord.ActivityType.listening, name='>help'),
+                        case_insensitive=True,
+                        strip_after_prefix=True,
+                        owner_ids=[798584468998586388, 448740493468106753],
+                        help_command=HelpCommand())
         self.start_time = time.time()
         self.db = db
-        self.version = 11
+        self.version = 10.9
         self.prefix = {}
         self.custom_logs = {}
         self.mod_logs = {}

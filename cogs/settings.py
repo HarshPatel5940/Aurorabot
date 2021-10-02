@@ -9,15 +9,17 @@ from discord.ext import commands
 
 
 async def on_command_error(message, exception):
-    if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner) or isinstance(message.channel, discord.DMChannel): 
+    if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner) or isinstance(message.channel, discord.DMChannel):
         return
     if isinstance(exception, commands.MissingPermissions):
-        message.channel.send(f"{message.author.mention} You Lack Permissions !!") 
+        message.channel.send(
+            f"{message.author.mention} You Lack Permissions !!")
         return
     if isinstance(exception, commands.BotMissingPermissions):
-        message.channel.send(f"Bot is Lack Permissions !!") 
+        message.channel.send(f"Bot is Lack Permissions !!")
         return
-    if isinstance(exception, commands.MissingRequiredArgument): #Comparing the error to commands.MissingRequiredArgument
+    # Comparing the error to commands.MissingRequiredArgument
+    if isinstance(exception, commands.MissingRequiredArgument):
         await ctx.send(f"You are missing {exception.param.name}")
     await message.reply(
         f"{exception}\nCorrect Usage: ```\n{message.prefix}{message.command.qualified_name} {message.command.signature}\n```")
@@ -44,7 +46,6 @@ class BotSettings(commands.Cog):
             self.bot.prefix[ctx.guild.id] = new
             await ctx.send(f"Prefix set to {new}.")
 
-
     @staticmethod
     def cleanup_code(content):
         """Automatically removes code blocks from the code."""
@@ -62,7 +63,8 @@ class BotSettings(commands.Cog):
         This Command Is used to Reload all cogs
         """
         if cog == 'all':
-            embed = discord.Embed(title='Reloading Cogs...', description='', color=discord.Color.teal())
+            embed = discord.Embed(title='Reloading Cogs...',
+                                  description='', color=discord.Color.teal())
             extensions = [
                 "cogs.help",
                 "cogs.moderation",

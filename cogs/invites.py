@@ -38,12 +38,12 @@ class Invites(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        inviter = await self.tracker.fetch_inviter(member) 
+        inviter = await self.tracker.fetch_inviter(member)
         general = self.bot.get_channel(799974968921292812)
         channel = self.bot.get_channel(799978267293646868)
         guild = self.bot.get_guild(799974967504535572)
         desc = f"**Member :** {member.mention}"
-        
+
         if inviter is None:
             desc = f"**Member :** {member.mention}\n **Invited by: Inviter not found**"
         else:
@@ -55,10 +55,12 @@ class Invites(commands.Cog):
             color=discord.Color.green(),
             timestamp=datetime.now(self.IST)
         )
-        embed1.add_field(f"account creation : {member1.created_at.strftime('%d/%m/%y %H:%M:%S')}")
+        embed1.add_field(
+            f"account creation : {member1.created_at.strftime('%d/%m/%y %H:%M:%S')}")
         embed1.set_thumbnail(url=member.avatar.url)
         embed1.set_author(name=member.name, icon_url=member.avatar.url)
-        embed1.set_footer(text=member.guild.name, icon_url=member.guild.icon.url)
+        embed1.set_footer(text=member.guild.name,
+                          icon_url=member.guild.icon.url)
 
         x1 = f"{member.mention} Welcome to our FRNz Official community"
         x3 = f"{member.mention} Welcome to our FRNz Official community.\n since Dms off sent here"
@@ -75,7 +77,8 @@ class Invites(commands.Cog):
         )
         embed2.set_thumbnail(url=member.guild.icon.url)
         embed2.set_author(name=member.name, icon_url=member.avatar.url)
-        embed2.set_footer(text=member.guild.name, icon_url=member.guild.icon.url)
+        embed2.set_footer(text=member.guild.name,
+                          icon_url=member.guild.icon.url)
         try:
             await member.send(x1, embed=embed2)
         except:
@@ -92,11 +95,12 @@ class Invites(commands.Cog):
             title="A Member Just Left :( ",
             description="Goodbye from all of us..",
             color=discord.Color.red(),
-            timestamp=datetime.now(self.IST)          
+            timestamp=datetime.now(self.IST)
         )
         embed.set_thumbnail(url=member.avatar.url)
         embed.set_author(name=member.name, icon_url=member.avatar.url)
-        embed.set_footer(text=member.guild.name, icon_url=member.guild.icon.url)
+        embed.set_footer(text=member.guild.name,
+                         icon_url=member.guild.icon.url)
         await channel.send(embed=embed)
 
 

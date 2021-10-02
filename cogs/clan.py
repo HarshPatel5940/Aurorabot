@@ -31,7 +31,7 @@ class Clan(commands.Cog):
         del self.bot.clan[member.id]
         await ctx.reply(f"{member.name}#{member.discriminator} Has Been Removed from Db")
 
-    @clan.command(name='setrank', aliases=["sr","change"])
+    @clan.command(name='setrank', aliases=["sr", "change"])
     async def rank_change(self, ctx, member: discord.Member, rank):
         """Update a member rank"""
         await self.bot.db.execute(f"""UPDATE clan SET rank = $1 WHERE member_id = $2""", rank, member.id)
@@ -100,7 +100,8 @@ class Clan(commands.Cog):
 <@735784238384807999> - [Youtube Link](https://www.youtube.com/channel/UCrjHMGF6GoAAsNqxMTEi05g)
 
 <@484319440108781568> - [Youtube Link](https://www.youtube.com/channel/UC04Zp15M5K21g45J45nV3SA)"""
-        clan_embed = discord.Embed(title='__CLAN CONTENT CREATORS__', description=doc, color=discord.Color.blurple())
+        clan_embed = discord.Embed(
+            title='__CLAN CONTENT CREATORS__', description=doc, color=discord.Color.blurple())
         clan_embed.set_thumbnail(url=ctx.guild.icon.url)
         clan_embed.set_author(name=ctx.guild.name, icon_url=ctx.guild.icon.url)
         await ctx.send(embed=clan_embed)
@@ -108,4 +109,3 @@ class Clan(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Clan(bot))
-

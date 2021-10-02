@@ -48,7 +48,8 @@ class Moderation(commands.Cog):
 
         if ctx.guild.default_role not in channel.overwrites:
             overwrites = {
-                ctx.guild.default_role: discord.PermissionOverwrite(send_messages=False)
+                ctx.guild.default_role: discord.PermissionOverwrite(
+                    send_messages=False)
             }
             await channel.edit(overwrites=overwrites, reason=f"channel lock by {ctx.author}")
             await ctx.send(f":white_check_mark: Locked {channel.mention}")
@@ -73,7 +74,8 @@ class Moderation(commands.Cog):
 
         if ctx.guild.default_role not in channel.overwrites:
             overwrites = {
-                ctx.guild.default_role: discord.PermissionOverwrite(send_messages=None)
+                ctx.guild.default_role: discord.PermissionOverwrite(
+                    send_messages=None)
             }
             await channel.edit(overwrites=overwrites, reason=f"channel unlock by {ctx.author}")
             await ctx.send(f":white_check_mark: unlocked {channel.mention} ")
@@ -96,7 +98,8 @@ class Moderation(commands.Cog):
 
         if ctx.guild.default_role not in channel.overwrites:
             overwrites = {
-                ctx.guild.default_role: discord.PermissionOverwrite(view_channel=False)
+                ctx.guild.default_role: discord.PermissionOverwrite(
+                    view_channel=False)
             }
             await channel.edit(overwrites=overwrites, reason=f"channel made private by {ctx.author}")
             await ctx.send(f":white_check_mark: {channel.mention} is Now Private")
@@ -121,7 +124,8 @@ class Moderation(commands.Cog):
 
         if ctx.guild.default_role not in channel.overwrites:
             overwrites = {
-                ctx.guild.default_role: discord.PermissionOverwrite(view_channel=None)
+                ctx.guild.default_role: discord.PermissionOverwrite(
+                    view_channel=None)
             }
             await channel.edit(overwrites=overwrites, reason=f"channel made public by {ctx.author}")
             await ctx.send(f":white_check_mark: {channel.mention} is Now public")
@@ -158,7 +162,8 @@ class Moderation(commands.Cog):
         await member.add_roles(role, reason=f"Muted by:{ctx.author}, reason: {reason}")
         await ctx.send(f"**{member.name}#{member.discriminator} Has Been Muted**")
         channel = self.bot.get_channel(self.bot.mod_logs[ctx.guild.id])
-        embed = discord.Embed(title=f"{ctx.author.name} Muted: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
+        embed = discord.Embed(title=f"{ctx.author.name} Muted: {member.name}",
+                              description=f"reason : {reason}", colour=discord.Color.red())
         await channel.send(embed=embed)
 
     @commands.command(aliases=["um"])
@@ -177,7 +182,8 @@ class Moderation(commands.Cog):
 
             await ctx.send(f"**{member.display_name}#{member.discriminator} Has Been Unmuted**")
             channel = self.bot.get_channel(self.bot.mod_logs[ctx.guild.id])
-            embed = discord.Embed(title=f"{ctx.author.name} unmuted: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
+            embed = discord.Embed(title=f"{ctx.author.name} unmuted: {member.name}",
+                                  description=f"reason : {reason}", colour=discord.Color.red())
             await channel.send(embed=embed)
 
     @commands.command()
@@ -197,7 +203,8 @@ class Moderation(commands.Cog):
             return
 
         await ctx.guild.kick(user=member, reason=f"kick by:{ctx.author}, reason: {reason}")
-        embed = discord.Embed(title=f"{ctx.author.name} kicked: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
+        embed = discord.Embed(title=f"{ctx.author.name} kicked: {member.name}",
+                              description=f"reason : {reason}", colour=discord.Color.red())
         log_channel = self.bot.get_channel(self.bot.mod_logs[ctx.guild.id])
         await log_channel.send(embed=embed)
         await ctx.send(f"**{member.name} Has Been Kicked!**")
@@ -220,7 +227,8 @@ class Moderation(commands.Cog):
 
         await ctx.guild.ban(user=member, reason=f"Banned by:{ctx.author}, reason: {reason}")
 
-        embed = discord.Embed(title=f"{ctx.author.name} banned: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
+        embed = discord.Embed(title=f"{ctx.author.name} banned: {member.name}",
+                              description=f"reason : {reason}", colour=discord.Color.red())
         log_channel = self.bot.get_channel(self.bot.mod_logs[ctx.guild.id])
         await log_channel.send(embed=embed)
         await sleep(1)
@@ -237,7 +245,8 @@ class Moderation(commands.Cog):
         bandec = f"Name:- {member} \nID:- {member.id} \nResponsible Moderator:- {ctx.author}"
         embed = discord.Embed(title="Unban Case", description=bandec)
 
-        embed = discord.Embed(title=f"{ctx.author.name} banned: {member.name}", description=f"reason : {reason}", colour=discord.Color.red())
+        embed = discord.Embed(title=f"{ctx.author.name} banned: {member.name}",
+                              description=f"reason : {reason}", colour=discord.Color.red())
         log_channel = self.bot.get_channel(self.bot.mod_logs[ctx.guild.id])
         await log_channel.send(embed=embed)
         await sleep(1)

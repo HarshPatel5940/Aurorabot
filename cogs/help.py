@@ -68,7 +68,8 @@ class HelpCommand(commands.DefaultHelpCommand):
         embed.add_field(name='Usage',
                         value=f"**{self.context.prefix}{command.name} {command.signature}**\n{command.brief if command.brief is not None else ''}")
         if command.aliases != []:
-            embed.add_field(name='Aliases', value=f"```\n{', '.join(command.aliases)}\n```", inline=False)
+            embed.add_field(
+                name='Aliases', value=f"```\n{', '.join(command.aliases)}\n```", inline=False)
         embed.set_footer(text="[] - optional, <> - required")
         await self.send(embed=embed)
 

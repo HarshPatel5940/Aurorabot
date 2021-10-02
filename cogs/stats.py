@@ -83,7 +83,8 @@ class Stats(commands.Cog):
         embed.add_field(name="Bot Made By:", value="<@448740493468106753>")
 
         embed.set_footer(text=f"{message.guild.name} | {self.bot.user.name}")
-        embed.set_author(name=self.bot.user.name, icon_url=self.bot.user.avatar.url)
+        embed.set_author(name=self.bot.user.name,
+                         icon_url=self.bot.user.avatar.url)
         embed.set_thumbnail(url=self.bot.user.avatar.url)
         await message.channel.send(embed=embed)
 
@@ -98,12 +99,15 @@ class Stats(commands.Cog):
                               timestamp=datetime.utcnow())
 
         embed.add_field(name="ID", value=f"{member1.id}", inline=False)
-        embed.add_field(name="Name", value=f"{member1.name}#{member1.discriminator}")
+        embed.add_field(
+            name="Name", value=f"{member1.name}#{member1.discriminator}")
         embed.add_field(name="Top role", value=f"{member1.top_role.mention}")
         embed.add_field(name="status",
                         value=f"{str(member1.activity.type).split('.') if member1.activity else 'N/A'} {member1.activity.name if member1.activity else ''}")
-        embed.add_field(name="created at", value=f"{member1.created_at.strftime('%d/%m/%y %H:%M:%S')}")
-        embed.add_field(name="Joined at", value=f"{member1.joined_at.strftime('%d/%m/%y %H:%M:%S')}")
+        embed.add_field(
+            name="created at", value=f"{member1.created_at.strftime('%d/%m/%y %H:%M:%S')}")
+        embed.add_field(
+            name="Joined at", value=f"{member1.joined_at.strftime('%d/%m/%y %H:%M:%S')}")
         embed.add_field(name="Boosted?", value=f"{member1.premium_since}")
 
         await ctx.reply(embed=embed)
@@ -119,19 +123,23 @@ class Stats(commands.Cog):
             description=f"{'Category: {}'.format(channel.category.name) if channel.category else 'This channel is not in a category'}",
             color=discord.Color.blurple(),
         )
-        embed.add_field(name="Channel Guild", value=ctx.guild.name, inline=False)
+        embed.add_field(name="Channel Guild",
+                        value=ctx.guild.name, inline=False)
         embed.add_field(name="Channel Id", value=channel.id, inline=False)
         embed.add_field(
             name="Channel Topic",
             value=f"{channel.topic if channel.topic else 'No topic.'}",
             inline=False,
         )
-        embed.add_field(name="Channel Position", value=channel.position, inline=False)
+        embed.add_field(name="Channel Position",
+                        value=channel.position, inline=False)
         embed.add_field(
             name="Channel Slowmode Delay", value=channel.slowmode_delay, inline=False
         )
-        embed.add_field(name="Channel is nsfw?", value=channel.is_nsfw(), inline=False)
-        embed.add_field(name="Channel is news?", value=channel.is_news(), inline=False)
+        embed.add_field(name="Channel is nsfw?",
+                        value=channel.is_nsfw(), inline=False)
+        embed.add_field(name="Channel is news?",
+                        value=channel.is_news(), inline=False)
         embed.add_field(
             name="Channel Creation Time", value=channel.created_at, inline=False
         )
@@ -154,19 +162,22 @@ class Stats(commands.Cog):
         embed.set_thumbnail(url=ctx.guild.icon.url)
 
         statuses = [len(list(filter(lambda m: str(m.status) == "online", ctx.guild.members))),
-                    len(list(filter(lambda m: str(m.status) == "idle", ctx.guild.members))),
+                    len(list(filter(lambda m: str(m.status)
+                        == "idle", ctx.guild.members))),
                     len(list(filter(lambda m: str(m.status) == "dnd", ctx.guild.members))),
                     len(list(filter(lambda m: str(m.status) == "offline", ctx.guild.members)))]
 
         fields = [("Owner & owner id", f"{ctx.guild.owner}, {ctx.guild.owner.id}", False),
                   ("Server ID", ctx.guild.id, True),
-                  ("Created at", ctx.guild.created_at.strftime("%d/%m/%Y %H:%M:%S"), True),
+                  ("Created at", ctx.guild.created_at.strftime(
+                      "%d/%m/%Y %H:%M:%S"), True),
                   ("Region", ctx.guild.region, True),
                   ("Members", len(ctx.guild.members), True),
                   ("Humans", len(list(filter(lambda m: not m.bot, ctx.guild.members))), True),
                   ("Bots", len(list(filter(lambda m: m.bot, ctx.guild.members))), True),
                   ("Banned members", len(await ctx.guild.bans()), True),
-                  ("Statuses", f"🟢 {statuses[0]} 🟠 {statuses[1]} 🔴 {statuses[2]} ⚪ {statuses[3]}", True),
+                  ("Statuses",
+                   f"🟢 {statuses[0]} 🟠 {statuses[1]} 🔴 {statuses[2]} ⚪ {statuses[3]}", True),
                   ("Text channels", len(ctx.guild.text_channels), True),
                   ("Voice channels", len(ctx.guild.voice_channels), True),
                   ("Categories", len(ctx.guild.categories), True),

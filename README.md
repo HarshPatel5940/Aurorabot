@@ -24,7 +24,7 @@
 
 ## Bot Info
 1) Bot Prefix: `>` customisable 
-2) Bot Version: 11
+2) Bot Version: 10.9
 3) Python Version: 3.9.1 
 4) [Discord.Py](https://github.com/rapptz/discord.py) Version: 2.0.0
 5) Customised Bot made for [FRNz Official Server]( https://discord.gg/kbb3tG3BPz)
@@ -32,7 +32,7 @@
 
 
 ## How to Host the bot
-### Prerequisites:
+### You should have:
    - [python]()
    - [git]()
    - bot token (Make a discord application with bot and **Copy the token**)
@@ -47,7 +47,7 @@
    ```
 - You Need to create one table in postgree data base. (create using below cmd)
    ```
-   CREATE TABLE guild();
+   Pls Wait for an updated readme
    ```
 - install the requirements by going to **command prompt** and do the below command
    ```

@@ -2,7 +2,7 @@ https://github.com/rapptz/discord.py/archive/master.zip
 pytz
 DiscordUtils
 pip
-wheel
+wheel 
 attrs
 idna
 multidict
