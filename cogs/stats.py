@@ -71,6 +71,7 @@ class Stats(commands.Cog):
         mem1 = self.bot.get_user(854230635425693756)
         embed = discord.Embed(
             title=f"{mem1.name} Stats ",
+            description="Aurora Bot is a [Open Source](https://github.com/HarshPatel5940/AuroraBot) project!! This is a multi-purpose bot which is easy to use",
             colour=discord.Color.blurple(),
             timestamp=datetime.utcnow(), )
 

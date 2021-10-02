@@ -41,7 +41,7 @@ class Automod(commands.Cog):
                     f"{message.author.mention} No invite Links allowed! <a:Red_alert:863017113581256715> Repeating this will Cause in a Mute.")
                 embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
                                       description=f"reason : Sent Invite link", colour=discord.Color.red())
-                log_channel = self.bot.get_channel(863000643303374920)
+                log_channel = self.bot.get_channel(self.bot.mod_logs[message.guild.id])
                 await log_channel.send(embed=embed)
 
             lst = message.content.split("\n")
@@ -53,7 +53,7 @@ class Automod(commands.Cog):
                 embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
                                       description=f"reason : Sent Multiple lines in a single message",
                                       colour=discord.Color.red())
-                log_channel = self.bot.get_channel(863000643303374920)
+                log_channel = self.bot.get_channel(self.bot.mod_logs[message.guild.id])
                 await log_channel.send(embed=embed)
 
             if len(message.mentions) > 8:
@@ -66,7 +66,7 @@ class Automod(commands.Cog):
                 await message.author.add_roles(role, reason="Automod muted for Mass Mention (5m)")
                 embed = discord.Embed(title=f"AutoMod Muted {message.author.name}",
                                       description=f"reason : Spamming", colour=discord.Color.red())
-                log_channel = self.bot.get_channel(863000643303374920)
+                log_channel = self.bot.get_channel(self.bot.mod_logs[message.guild.id])
                 await log_channel.send(embed=embed)
                 await asyncio.sleep(300)
                 await message.author.remove_roles(role, reason="Automatic unmute for spam")
@@ -87,7 +87,7 @@ class Automod(commands.Cog):
                         f"{message.author.mention} No bad words Allowed Here.<a:Red_alert:863017113581256715> Repeating this will Cause in a Mute.")
                     embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
                                           description=f"reason : Used bad word ||{words}||", colour=discord.Color.red())
-                    log_channel = self.bot.get_channel(863000643303374920)
+                    log_channel = self.bot.get_channel(self.bot.mod_logs[message.guild.id])
                     await log_channel.send(embed=embed)
 
             if len(list(filter(lambda message: check(message), self.bot.cached_messages))) >= 4:
@@ -100,7 +100,7 @@ class Automod(commands.Cog):
                 await message.author.add_roles(role, reason="Automod muted Spamming")
                 embed = discord.Embed(title=f"AutoMod Muted {message.author.name}",
                                       description=f"reason : Spamming", colour=discord.Color.red())
-                log_channel = self.bot.get_channel(863000643303374920)
+                log_channel = self.bot.get_channel(self.bot.mod_logs[message.guild.id])
                 await log_channel.send(embed=embed)
                 await asyncio.sleep(1)
                 await message.channel.send(

@@ -9,8 +9,16 @@ from discord.ext import commands
 
 
 async def on_command_error(message, exception):
-    if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner) or isinstance(message.channel, discord.DMChannel):
+    if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner) or isinstance(message.channel, discord.DMChannel): 
         return
+    if isinstance(exception, commands.MissingPermissions):
+        message.channel.send(f"{message.author.mention} You Lack Permissions !!") 
+        return
+    if isinstance(exception, commands.BotMissingPermissions):
+        message.channel.send(f"Bot is Lack Permissions !!") 
+        return
+    if isinstance(exception, commands.MissingRequiredArgument): #Comparing the error to commands.MissingRequiredArgument
+        await ctx.send(f"You are missing {exception.param.name}")
     await message.reply(
         f"{exception}\nCorrect Usage: ```\n{message.prefix}{message.command.qualified_name} {message.command.signature}\n```")
     raise exception
@@ -19,7 +27,6 @@ async def on_command_error(message, exception):
 class BotSettings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.guild = self.bot.get_guild(799974967504535572)
         self._last_result = None
 
     @commands.Cog.listener()
@@ -37,10 +44,6 @@ class BotSettings(commands.Cog):
             self.bot.prefix[ctx.guild.id] = new
             await ctx.send(f"Prefix set to {new}.")
 
-    @change_prefix.error
-    async def change_prefix_error(self, ctx, exc):
-        if isinstance(exc, commands.CheckFailure):
-            await ctx.send("You need the Manage Server permission to do that.")
 
     @staticmethod
     def cleanup_code(content):
@@ -87,7 +90,7 @@ class BotSettings(commands.Cog):
         This command is Used to UnLoad a cog
         """
         self.bot.load_extension(f"cogs.{cog}")
-        await ctx.send(f"{cog} unloaded successfully.")
+        await ctx.send(f"{cog} loaded successfully.")
 
     @commands.command()
     @commands.is_owner()
@@ -146,112 +149,6 @@ class BotSettings(commands.Cog):
             else:
                 self._last_result = ret
                 await ctx.reply(f'```py\n{value}{ret}\n```')
-
-    @commands.command(hidden=True)
-    async def sql(self, ctx, *, query: str):
-        """Run some SQL."""
-
-        # the imports are here because I imagine some people would want to use
-        # this cog as a base for their other cog, and since this one is kinda
-        # odd and unnecessary for most people, I will make it easy to remove
-        # for those people.
-        class plural:
-            def __init__(self, value):
-                self.value = value
-
-            def __format__(self, format_spec):
-                v = self.value
-                singular, sep, plural = format_spec.partition('|')
-                plural = plural or f'{singular}s'
-                if abs(v) != 1:
-                    return f'{v} {plural}'
-                return f'{v} {singular}'
-
-        class TabularData:
-            def __init__(self):
-                self._widths = []
-                self._columns = []
-                self._rows = []
-
-            def set_columns(self, columns):
-                self._columns = columns
-                self._widths = [len(c) + 2 for c in columns]
-
-            def add_row(self, row):
-                rows = [str(r) for r in row]
-                self._rows.append(rows)
-                for index, element in enumerate(rows):
-                    width = len(element) + 2
-                    if width > self._widths[index]:
-                        self._widths[index] = width
-
-            def add_rows(self, rows):
-                for row in rows:
-                    self.add_row(row)
-
-            def render(self):
-                """Renders a table in rST format.
-                Example:
-                +-------+-----+
-                | Name  | Age |
-                +-------+-----+
-                | Alice | 24  |
-                |  Bob  | 19  |
-                +-------+-----+
-                """
-
-                sep = '+'.join('-' * w for w in self._widths)
-                sep = f'+{sep}+'
-
-                to_draw = [sep]
-
-                def get_entry(d):
-                    elem = '|'.join(f'{e:^{self._widths[i]}}' for i, e in enumerate(d))
-                    return f'|{elem}|'
-
-                to_draw.append(get_entry(self._columns))
-                to_draw.append(sep)
-
-                for row in self._rows:
-                    to_draw.append(get_entry(row))
-
-                to_draw.append(sep)
-                return '\n'.join(to_draw)
-
-        import time
-
-        query = self.cleanup_code(query)
-
-        is_multistatement = query.count(';') > 1
-        if is_multistatement:
-            # fetch does not support multiple statements
-            strategy = self.bot.db.execute
-        else:
-            strategy = self.bot.db.fetch
-
-        try:
-            start = time.perf_counter()
-            results = await strategy(query)
-            dt = (time.perf_counter() - start) * 1000.0
-        except Exception:
-            return await ctx.send(f'```py\n{traceback.format_exc()}\n```')
-
-        rows = len(results)
-        if is_multistatement or rows == 0:
-            return await ctx.send(f'`{dt:.2f}ms: {results}`')
-
-        headers = list(results[0].keys())
-        table = TabularData()
-        table.set_columns(headers)
-        table.add_rows(list(r.values()) for r in results)
-        render = table.render()
-
-        fmt = f'```\n{render}\n```\n*Returned {plural(rows):row} in {dt:.2f}ms*'
-        if len(fmt) > 2000:
-            fp = io.BytesIO(fmt.encode('utf-8'))
-            await ctx.send('Too many results...', file=discord.File(fp, 'results.txt'))
-        else:
-            await ctx.send(fmt)
 
 
 def setup(bot):

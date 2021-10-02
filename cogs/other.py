@@ -39,7 +39,9 @@ class Others(commands.Cog):
     @commands.command(name="editemb")
     @commands.has_permissions(manage_roles=True)
     async def edit_embed(self, ctx, channel: discord.TextChannel, id_: int, *, message):
-        """Edit Exsisting Embed"""
+        """
+        This Command is used to Edit Exsisting Embed
+        """
         msg1 = 0
         try:
             msg1 = await channel.fetch_message(id_)
@@ -69,7 +71,6 @@ class Others(commands.Cog):
         """
         This Command is used to send a Embed Through Bot in a channel
         """
-
         embed = discord.Embed(description=message, color=discord.Color.teal())
         await user.send(embed=embed)
         await ctx.message.add_reaction("✅")
