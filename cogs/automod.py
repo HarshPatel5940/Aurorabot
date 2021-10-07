@@ -16,7 +16,7 @@ class Automod(commands.Cog):
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         if before.display_name != after.display_name:
-            if not after.guild_permissions.manage_roles:
+            if not after.guild_permissions.manage_messages:
                 if f"{after.display_name}".startswith("!" or "! "):
                     await after.edit(nick="zHoister Alert")
 
@@ -44,15 +44,16 @@ class Automod(commands.Cog):
                     return
                 try:
                     await message.delete()
-                    await message.channel.send(
-                        f"{message.author.mention} No invite Links allowed! <a:ALERT:895323744380256286> Repeating this will Cause in a Mute.")
-                    embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
-                                          description=f"reason : Sent Invite link", colour=discord.Color.red())
-                    log_channel = self.bot.get_channel(
-                        self.bot.mod_logs[message.guild.id])
-                    await log_channel.send(embed=embed)
                 except:
                     pass
+                await message.channel.send(
+                    f"{message.author.mention} No invite Links allowed! <a:ALERT:895323744380256286> Repeating this will Cause in a Mute.")
+                embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
+                                        description=f"reason : Sent Invite link", colour=discord.Color.red())
+                log_channel = self.bot.get_channel(
+                    self.bot.mod_logs[message.guild.id])
+                await log_channel.send(embed=embed)
+
 
             lst = message.content.split("\n")
             if len(lst) > 9:
@@ -74,9 +75,11 @@ class Automod(commands.Cog):
             if len(message.mentions) > 8:
                 if message.author.guild_permissions.manage_messages:
                     return
-                await message.delete()
-                await message.channel.send(
-                    f"{message.author.mention} Don't Mass Mention! You Have Been Muted in Server for 5m")
+                try:
+                    await message.delete()
+                except:
+                    pass    
+                await message.channel.send(f"{message.author.mention} Don't Mass Mention! You Have Been Muted in Server for 5m")
                 role = discord.utils.get(message.guild.roles, name="Muted")
                 await message.author.add_roles(role, reason="Automod muted for Mass Mention (5m)")
                 embed = discord.Embed(title=f"AutoMod Muted {message.author.name}",
@@ -96,15 +99,16 @@ class Automod(commands.Cog):
                         return
                     try:
                         await message.delete()
-                        await message.channel.send(
-                            f"{message.author.mention} No bad words Allowed Here.<a:ALERT:895323744380256286> Repeating this will Cause in a Mute.")
-                        embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
-                                              description=f"reason : Used bad word ||{words}||", colour=discord.Color.red())
-                        log_channel = self.bot.get_channel(
-                            self.bot.mod_logs[message.guild.id])
-                        await log_channel.send(embed=embed)
                     except:
                         pass
+                    await message.channel.send(
+                        f"{message.author.mention} No bad words Allowed Here.<a:ALERT:895323744380256286> Repeating this will Cause in a Mute.")
+                    embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
+                                            description=f"reason : Used bad word ||{words}||", colour=discord.Color.red())
+                    log_channel = self.bot.get_channel(
+                        self.bot.mod_logs[message.guild.id])
+                    await log_channel.send(embed=embed)
+
 
             if len(list(filter(lambda message: check(message), self.bot.cached_messages))) >= 4:
                 if message.author.guild_permissions.manage_roles and message.author.guild_permissions.manage_messages:
