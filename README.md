@@ -23,8 +23,8 @@
 </a>
 
 ## Bot Info
-1) Bot Prefix: `>` customisable 
-2) Bot Version: 10.9
+1) Bot Prefix: > `customisable`
+2) Bot Version: 11
 3) Python Version: 3.9.1 
 4) [Discord.Py](https://github.com/rapptz/discord.py) Version: 2.0.0
 5) Customised Bot made for [FRNz Official Server]( https://discord.gg/kbb3tG3BPz)

@@ -15,6 +15,7 @@ class Stats(commands.Cog):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
     @commands.command(name="emojiinfo", aliases=["ei"])
+    @commands.guild_only()
     async def emoji_info(self, ctx, emoji: discord.Emoji = None):
         if not emoji:
             return await ctx.invoke(self.bot.get_command("help"), entity="emojiinfo")
@@ -60,6 +61,7 @@ class Stats(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="botinfo", aliases=["bi", "bot", "bot info"])
+    @commands.guild_only()
     async def info_bot(self, message):
         """
         This Command Provides us the info of the bot
@@ -71,7 +73,7 @@ class Stats(commands.Cog):
         mem1 = self.bot.get_user(854230635425693756)
         embed = discord.Embed(
             title=f"{mem1.name} Stats ",
-            description="Aurora Bot is a [Open Source](https://github.com/HarshPatel5940/AuroraBot) project!! This is a multi-purpose bot which is easy to use",
+            description="Aurora Bot is a [Open Source](https://github.com/HarshPatel5940/AuroraBot) project!! This is a moaderation bot which is easy to use",
             colour=discord.Color.blurple(),
             timestamp=datetime.utcnow(), )
 
@@ -89,6 +91,7 @@ class Stats(commands.Cog):
         await message.channel.send(embed=embed)
 
     @commands.command(name="userinfo", aliases=["ui", "memberinfo", "mi", "whois"])
+    @commands.guild_only()
     async def info_user(self, ctx, member: Optional[discord.Member]):
         """
         gets info of a user
@@ -113,6 +116,7 @@ class Stats(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command(name="channelstats", aliases=["cs"])
+    @commands.guild_only()
     async def channel_stats(self, ctx, channel: discord.TextChannel = None):
         """
         This Command Provides us the stats of the channel
@@ -154,6 +158,7 @@ class Stats(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="serverinfo", aliases=["guildinfo", "si", "gi"])
+    @commands.guild_only()
     async def server_info(self, ctx):
         embed = discord.Embed(title="Server information",
                               color=discord.Color.blurple(),

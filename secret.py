@@ -1,2 +1,2 @@
 token = "--> Token Here <--"
-db_url = "--> Postgre Db Url <-- "
+db_url = "--> Postgre DB Url <-- "

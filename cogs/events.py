@@ -20,181 +20,143 @@ class Events(commands.Cog):
         if message.author.id == self.bot.user.id:
             return
         if not message.guild:
-            await message.reply(
-                "<a:Red_alert:863017113581256715> **For Any Assistance create ticket in <#861641048224038963>** <a:Red_alert:863017113581256715>")
-            await message.channel.send("If Urgent ping any staff in ticket")
-            """
-            if len(message.content) < 10:
-                await message.channel.send(
-                    "Your message should be at least 10 characters in length to be sent to Staff.")
-                return
-            else:
-                embed = discord.Embed(
-                    title=f"Modmail For {message.author.display_name}#{message.author.discriminator}",
-                    description=f"{message.content}",
-                    color=0x00ff00,
-                    timestamp=datetime.now(self.IST)
-                )
-                embed.add_field(name=f"reply with >dm {message.author.id}", value="Reply to ur member", inline=False)
-    
-                embed.set_thumbnail(url=message.author.avatar.url)
-    
-                log_channel = self.bot.get_channel(863000430203895808)
-                await log_channel.send(embed=embed)
-    
-                embed2 = discord.Embed(
-                    title="Message Has Been Sent ",
-                    description="<a:Red_alert:863017113581256715> Message Has Been Sent to Staff Successfully <a:Red_alert:863017113581256715>\nStaff Will Contact You as soon as possible\nreplying to this message or sending message will create a new ticket\n\n**If you need to send a image or attachment pls send the link of attachment with the message**",
-                    color=0x00ff00,
-                    timestamp=datetime.now(self.IST)
-                )
-                embed2.set_footer(text=f"{log_channel.guild.name} Management Team")
-                embed2.set_thumbnail(
-                    url="https://cdn.discordapp.com/icons/799974967504535572/a_eecabad5e77279928c7684ce09964fb8.gif")
-                await asyncio.sleep(1)
-                await message.channel.send(embed=embed2)
-                return
-            """
+            # await message.reply(
+            #     "<a:ALERT:895323744380256286> **For Any Assistance create ticket in <#861641048224038963>** <a:ALERT:895323744380256286>")
+            # await message.channel.send("If Urgent ping any staff in ticket")
             return
 
-        if message.content == "<@!854230635425693756>":
-            await message.reply("My Prefix is `>`, try running `>help`")
+        if message.content == f"<@!{self.bot.user.id}>":
+            await message.reply(f"My Prefix is `{self.bot.prefix[message.guild.id]}`, try running `>help`")
 
         elif message.content.lower() == "hi":
             await message.reply(f"Hey buddy! Wat's Up?")
-
+    
     @commands.Cog.listener()
     async def on_command_error(self, message, exception):
-        if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner):
+        if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner) or isinstance(message.channel, discord.DMChannel):
             return
-        if isinstance(exception, commands.CheckFailure):
-            await message.reply(f"Hey! {message.author.mention} you lack on permissions")
+        if isinstance(exception, commands.DisabledCommand):
+            await message.channel.send(f"{message.command.qualified_name} is Disabled!!!")
             return
-        await message.reply(
-            f"{exception}\nCorrect Usage: ```\n{message.prefix}{message.command.qualified_name} {message.command.signature}\n```")
+        if isinstance(exception, commands.MissingPermissions):
+            await message.channel.send(f"{message.author.mention} You Lack Permissions !!")
+            return
+        if isinstance(exception, commands.BotMissingPermissions):
+            await message.channel.send(f"Bot is Lack Permissions !!")
+            return
+        if isinstance(exception, commands.MissingRequiredArgument):
+            await message.reply(f"You are missing {exception.param.name}\nCorrect Usage: ```\n{message.prefix}{message.command.qualified_name} {message.command.signature}\n```")
+            return
+        await message.reply(f"{exception}")
+        raise exception
 
     @commands.Cog.listener()
-    async def on_user_update(self, before, after):
-        if before.name != after.name:
-            embed = discord.Embed(title=f"Username change",
-                                  colour=discord.Color.magenta(),
-                                  timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :",
-                            value=f"{before.name} ({before.id})")
-            fields = [("Before", before.name, False),
-                      ("After", after.name, False)]
+    async def on_guild_join(self, guild):
+        self.bot.prefix[guild.id] = ">"
+        # await self.bot.db.execute("INSERT INTO guild")
 
-            for name, value, inline in fields:
-                embed.add_field(name=name, value=value, inline=inline)
-            log_channel = self.bot.get_channel(
-                self.bot.custom_logs[before.guild.id])
-            await log_channel.send(embed=embed)
+        embed1 = discord.Embed(title="Joined New Guild", colour=discord.Color.green(
+        ), timestamp=datetime.now(self.IST))
+        embed1.add_field(name="Server Details",
+                         value=f"Name {guild.name}\nId {guild.id}")
+        embed1.add_field(name="Member count",
+                         value=f"{len(guild.members)}")
+        embed1.set_thumbnail(url=guild.icon.url)
 
-        if before.discriminator != after.discriminator:
-            embed = discord.Embed(title=f"Discriminator change",
-                                  colour=discord.Color.magenta(),
-                                  timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :",
-                            value=f"{before.name} ({before.id})")
-            fields = [("Before", before.discriminator, False),
-                      ("After", after.discriminator, False)]
-
-            for name, value, inline in fields:
-                embed.add_field(name=name, value=value, inline=inline)
-            log_channel = self.bot.get_channel(
-                self.bot.custom_logs[before.guild.id])
-            await log_channel.send(embed=embed)
-
-        if before.avatar.url != after.avatar.url:
-            embed = discord.Embed(title=f"Avatar change",
-                                  description="New image is below, old to the thumbnail.",
-                                  colour=discord.Color.magenta(),
-                                  timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :",
-                            value=f"{before.name} ({before.id})")
-            embed.set_thumbnail(url=before.avatar.url)
-            embed.set_image(url=after.avatar.url)
-            log_channel = self.bot.get_channel(
-                self.bot.custom_logs[before.guild.id])
-            await log_channel.send(embed=embed)
+        channel = self.bot.get_channel(893887526299897937)
+        await channel.send(embed=embed1)
 
     @commands.Cog.listener()
-    async def on_member_update(self, before, after):
-        if before.display_name != after.display_name:
-            embed = discord.Embed(title=f"Nickname change",
-                                  colour=discord.Color.magenta(),
-                                  timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :",
-                            value=f"{before.name} ({before.id})")
-            fields = [("Before", before.display_name, False),
-                      ("After", after.display_name, False)]
+    async def on_guild_remove(self, guild):
+        del self.bot.prefix[guild.id] 
+        embed1 = discord.Embed(title="Left A Guild", colour=discord.Color.green(
+        ), timestamp=datetime.now(self.IST))
+        embed1.add_field(name="Server Details",
+                         value=f"Name {guild.name}\nId {guild.id}")
+        embed1.add_field(name="Member count",
+                         value=f"{len(guild.members)}")
+        embed1.set_thumbnail(url=guild.icon.url)
 
-            for name, value, inline in fields:
-                embed.add_field(name=name, value=value, inline=inline)
-            log_channel = self.bot.get_channel(
-                self.bot.custom_logs[before.guild.id])
-            await log_channel.send(embed=embed)
+        channel = self.bot.get_channel(893887526299897937)
+        await channel.send(embed=embed1)
 
-        elif before.roles != after.roles:
-            embed = discord.Embed(title=f"Role updates",
-                                  colour=discord.Color.magenta(),
-                                  timestamp=datetime.now(self.IST))
-            embed.add_field(name="Member name & id  :",
-                            value=f"{before.name} ({before.id})")
-            fields = [("Before", ", ".join([r.mention for r in before.roles]), False),
-                      ("After", ", ".join([r.mention for r in after.roles]), False)]
 
-            for name, value, inline in fields:
-                embed.add_field(name=name, value=value, inline=inline)
-            log_channel = self.bot.get_channel(
-                self.bot.custom_logs[before.guild.id])
-            await log_channel.send(embed=embed)
+    # @commands.Cog.listener()
+    # async def on_user_update(self, before, after):
+    #     if before.name != after.name:
+    #         embed = discord.Embed(title=f"Username change",
+    #                               colour=discord.Color.magenta(),
+    #                               timestamp=datetime.now(self.IST))
+    #         embed.add_field(name="Member name & id  :",
+    #                         value=f"{before.name} ({before.id})")
+    #         fields = [("Before", before.name, False),
+    #                   ("After", after.name, False)]
 
-    @commands.Cog.listener()
-    async def on_message_edit(self, before, after):
-        try:
-            if before.content != after.content:
-                embed = discord.Embed(title="Message edit",
-                                      description=f"Member name & id : {before.author.name} ({before.author.id})",
-                                      colour=discord.Color.orange(),
-                                      timestamp=datetime.now(self.IST))
+    #         for name, value, inline in fields:
+    #             embed.add_field(name=name, value=value, inline=inline)
+    #         log_channel = self.bot.get_channel(
+    #             self.bot.custom_logs[before.guild.id])
+    #         await log_channel.send(embed=embed)
 
-                fields = [("Before", before.content, False),
-                          ("After", after.content, False)]
+    #     if before.discriminator != after.discriminator:
+    #         embed = discord.Embed(title=f"Discriminator change",
+    #                               colour=discord.Color.magenta(),
+    #                               timestamp=datetime.now(self.IST))
+    #         embed.add_field(name="Member name & id  :",
+    #                         value=f"{before.name} ({before.id})")
+    #         fields = [("Before", before.discriminator, False),
+    #                   ("After", after.discriminator, False)]
 
-                for name, value, inline in fields:
-                    embed.add_field(name=name, value=value, inline=inline)
-                embed.add_field(name="Message link",
-                                value=f"[click here]({after.jump_url})")
-                log_channel = self.bot.get_channel(
-                    self.bot.custom_logs[after.guild.id])
-                await log_channel.send(embed=embed)
-                print()
-        except:
-            pass
+    #         for name, value, inline in fields:
+    #             embed.add_field(name=name, value=value, inline=inline)
+    #         log_channel = self.bot.get_channel(
+    #             self.bot.custom_logs[before.guild.id])
+    #         await log_channel.send(embed=embed)
 
-    @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        try:
-            if not message.author.bot:
-                embed = discord.Embed(title="Message deletion",
-                                      description=f"Member name & id : {message.author.name} ({message.author.id})",
-                                      colour=discord.Color.orange(),
-                                      timestamp=datetime.now(self.IST))
-                embed.add_field(name="member id : ",
-                                value=f"-{message.author.id}")
-                embed.add_field(name="channel : ",
-                                value=f"-{message.channel.mention}")
+    #     if before.avatar.url != after.avatar.url:
+    #         embed = discord.Embed(title=f"Avatar change",
+    #                               description="New image is below, old to the thumbnail.",
+    #                               colour=discord.Color.magenta(),
+    #                               timestamp=datetime.now(self.IST))
+    #         embed.add_field(name="Member name & id  :",
+    #                         value=f"{before.name} ({before.id})")
+    #         embed.set_thumbnail(url=before.avatar.url)
+    #         embed.set_image(url=after.avatar.url)
+    #         log_channel = self.bot.get_channel(
+    #             self.bot.custom_logs[before.guild.id])
+    #         await log_channel.send(embed=embed)
 
-                fields = [("Content", message.content, False)]
-                for name, value, inline in fields:
-                    embed.add_field(name=name, value=value, inline=inline)
+    # @commands.Cog.listener()
+    # async def on_member_update(self, before, after):
+    #     if before.display_name != after.display_name:
+    #         embed = discord.Embed(title=f"Nickname change",
+    #                               colour=discord.Color.magenta(),
+    #                               timestamp=datetime.now(self.IST))
+    #         embed.add_field(name="Member name & id  :",
+    #                         value=f"{before.name} ({before.id})")
+    #         fields = [("Before", before.display_name, False),
+    #                   ("After", after.display_name, False)]
 
-                log_channel = self.bot.get_channel(
-                    self.bot.custom_logs[message.guild.id])
-                await log_channel.send(embed=embed)
-        except Exception():
-            raise Exception()
+    #         for name, value, inline in fields:
+    #             embed.add_field(name=name, value=value, inline=inline)
+    #         log_channel = self.bot.get_channel(
+    #             self.bot.custom_logs[before.guild.id])
+    #         await log_channel.send(embed=embed)
+
+    #     elif before.roles != after.roles:
+    #         embed = discord.Embed(title=f"Role updates",
+    #                               colour=discord.Color.magenta(),
+    #                               timestamp=datetime.now(self.IST))
+    #         embed.add_field(name="Member name & id  :",
+    #                         value=f"{before.name} ({before.id})")
+    #         fields = [("Before", ", ".join([r.mention for r in before.roles]), False),
+    #                   ("After", ", ".join([r.mention for r in after.roles]), False)]
+
+    #         for name, value, inline in fields:
+    #             embed.add_field(name=name, value=value, inline=inline)
+    #         log_channel = self.bot.get_channel(
+    #             self.bot.custom_logs[before.guild.id])
+    #         await log_channel.send(embed=embed)
 
 
 def setup(bot):

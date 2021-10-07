@@ -21,16 +21,8 @@ class Invites(commands.Cog):
         await self.tracker.update_invite_cache(invite)
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild):
-        await self.tracker.update_guild_cache(guild)
-
-    @commands.Cog.listener()
     async def on_invite_delete(self, invite):
         await self.tracker.remove_invite_cache(invite)
-
-    @commands.Cog.listener()
-    async def on_guild_remove(self, guild):
-        await self.tracker.remove_guild_cache(guild)
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -55,8 +47,7 @@ class Invites(commands.Cog):
             color=discord.Color.green(),
             timestamp=datetime.now(self.IST)
         )
-        embed1.add_field(
-            f"account creation : {member1.created_at.strftime('%d/%m/%y %H:%M:%S')}")
+        embed1.add_field(name = "account creation", value=f"{member.created_at.strftime('%d/%m/%y %H:%M:%S')}")
         embed1.set_thumbnail(url=member.avatar.url)
         embed1.set_author(name=member.name, icon_url=member.avatar.url)
         embed1.set_footer(text=member.guild.name,

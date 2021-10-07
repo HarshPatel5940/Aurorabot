@@ -7,23 +7,7 @@ from datetime import datetime as dt
 import discord
 from discord.ext import commands
 
-
-async def on_command_error(message, exception):
-    if isinstance(exception, commands.CommandNotFound) or isinstance(exception, commands.NotOwner) or isinstance(message.channel, discord.DMChannel):
-        return
-    if isinstance(exception, commands.MissingPermissions):
-        message.channel.send(
-            f"{message.author.mention} You Lack Permissions !!")
-        return
-    if isinstance(exception, commands.BotMissingPermissions):
-        message.channel.send(f"Bot is Lack Permissions !!")
-        return
-    # Comparing the error to commands.MissingRequiredArgument
-    if isinstance(exception, commands.MissingRequiredArgument):
-        await ctx.send(f"You are missing {exception.param.name}")
-    await message.reply(
-        f"{exception}\nCorrect Usage: ```\n{message.prefix}{message.command.qualified_name} {message.command.signature}\n```")
-    raise exception
+from main import initial_cogs
 
 
 class BotSettings(commands.Cog):
@@ -36,25 +20,32 @@ class BotSettings(commands.Cog):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
     @commands.command(name="prefix")
+    @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    async def change_prefix(self, ctx, new: str):
-        if len(new) > 5:
+    async def change_prefix(self, ctx, new_prefix: str):
+        if len(new_prefix) > 5:
             await ctx.send("The prefix can not be more than 5 characters in length.")
 
         else:
-            await self.bot.db.execute("UPDATE guild SET prefix = $1 WHERE server_id = $2", new, ctx.guild.id)
+            await self.bot.db.execute("UPDATE guild SET prefix = $1 WHERE server_id = $2", new_prefix, ctx.guild.id)
             self.bot.prefix[ctx.guild.id] = new
-            await ctx.send(f"Prefix set to {new}.")
+            await ctx.send(f"Prefix set to {new_prefix}.")
 
-    @staticmethod
-    def cleanup_code(content):
-        """Automatically removes code blocks from the code."""
-        # remove ```py\n```
-        if content.startswith('```') and content.endswith('```'):
-            return '\n'.join(content.split('\n')[1:-1])
+    @commands.command(name="toggle", description="Enable or disable a command!")
+    @commands.is_owner()
+    async def toggle(self, ctx, *, command):
+        command = self.bot.get_command(command)
 
-        # remove `foo`
-        return content.strip('` \n')
+        if command is None:
+            await ctx.send("I can't find a command with that name!")
+
+        elif ctx.command == command:
+            await ctx.send("You cannot disable this command.")
+
+        else:
+            command.enabled = not command.enabled
+            ternary = "enabled" if command.enabled else "disabled"
+            await ctx.send(f"I have {ternary} {command.qualified_name} for you!")
 
     @commands.command()
     @commands.is_owner()
@@ -65,19 +56,9 @@ class BotSettings(commands.Cog):
         if cog == 'all':
             embed = discord.Embed(title='Reloading Cogs...',
                                   description='', color=discord.Color.teal())
-            extensions = [
-                "cogs.help",
-                "cogs.moderation",
-                "cogs.other",
-                "cogs.settings",
-                "cogs.stats",
-                "cogs.events",
-                "cogs.invites",
-                "cogs.automod",
-                "cogs.clan"
-            ]
-            for i in extensions:
-                self.bot.reload_extension(i)
+
+            for i in initial_cogs:
+                self.bot.reload_extension(f"cogs.{i}")
                 embed.description += f"{i} reloaded successfully.\n"
             await ctx.send(embed=embed)
             return
@@ -103,6 +84,16 @@ class BotSettings(commands.Cog):
         self.bot.unload_extension(f"cogs.{cog}")
         await ctx.send(f"{cog} unloaded successfully.")
 
+    @staticmethod
+    def cleanup_code(content):
+        """Automatically removes code blocks from the code."""
+        # remove ```py\n```
+        if content.startswith('```') and content.endswith('```'):
+            return '\n'.join(content.split('\n')[1:-1])
+
+        # remove `foo`
+        return content.strip('` \n')
+        
     @commands.command(hidden=True)
     @commands.is_owner()
     async def eval(self, ctx, *, code: str):
