@@ -4,10 +4,14 @@ import discord
 from discord.ext import commands
 
 
-class BotInfo(commands.Cog):
+class help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.help_command.cog = self
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
     @commands.command(aliases=["pong"])
     async def ping(self, ctx):
@@ -35,7 +39,7 @@ class BotInfo(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(BotInfo(bot=bot))
+    bot.add_cog(help(bot=bot))
 
 
 class HelpCommand(commands.DefaultHelpCommand):

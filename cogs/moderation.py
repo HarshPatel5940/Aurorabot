@@ -11,8 +11,10 @@ class Moderation(commands.Cog):
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
-    @commands.command(aliases=["purge"])
-    @commands.has_permissions(manage_messages=True)
+    @commands.command(name="clear", aliases=["purge"])
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_roles=True,manage_messages = True)
+    @commands.bot_has_guild_permissions(manage_messages=True)
     async def clear(self, ctx, amount=0):
         """
         This command is used to delete multiple messages 
@@ -25,8 +27,10 @@ class Moderation(commands.Cog):
             await ctx.channel.purge(limit=amount)
             await ctx.send(f'{amount} messages deleted successfully.', delete_after=5)
 
-    @commands.command(name="sm")
-    @commands.has_permissions(manage_roles=True)
+    @commands.command(name="slowmode", aliases=["sm","ratelimit"])
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_roles=True,manage_messages = True)
+    @commands.bot_has_guild_permissions(manage_channels=True)
     async def setdelay(self, ctx, seconds: int):
         """
         This command is used to add/remove slowmode in chat
@@ -39,7 +43,9 @@ class Moderation(commands.Cog):
             await ctx.send(f"Channel {ctx.channel.mention} slowmode set to {seconds} seconds.")
 
     @commands.command(aliases=["lock", "l"])
-    @commands.has_permissions(manage_roles=True, manage_messages=True)
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_roles=True,manage_messages = True)
+    @commands.bot_has_guild_permissions(manage_channels=True)
     async def lockdown(self, ctx, channel: discord.TextChannel = None):
         """
         This Command is used to Lock  Channel
@@ -65,7 +71,9 @@ class Moderation(commands.Cog):
             await ctx.reply(f"{channel.mention} is **already Locked** :exclamation:")
 
     @commands.command(aliases=["unlock", "ul"])
-    @commands.has_permissions(manage_roles=True, manage_messages=True)
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_roles=True,manage_messages = True)
+    @commands.bot_has_guild_permissions(manage_channels=True)
     async def unlockdown(self, ctx, channel: discord.TextChannel = None):
         """
         This Command is used to Unlock a Channel
@@ -89,7 +97,9 @@ class Moderation(commands.Cog):
             await ctx.reply(f"{channel.mention} is **already Unlocked** :exclamation:")
 
     @commands.command(aliases=["h"])
-    @commands.has_permissions(manage_channels=True)
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_roles=True,manage_messages = True)
+    @commands.bot_has_guild_permissions(manage_channels=True)
     async def hide(self, ctx, channel: discord.TextChannel = None):
         """
         This Command is used to Lock  Channel
@@ -115,7 +125,9 @@ class Moderation(commands.Cog):
             await ctx.reply(f"{channel.mention} is **already private** :exclamation:")
 
     @commands.command(aliases=["uh"])
-    @commands.has_permissions(manage_channels=True)
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_roles=True,manage_messages = True)
+    @commands.bot_has_guild_permissions(manage_channels=True)
     async def unhide(self, ctx, channel: discord.TextChannel = None):
         """
         This Command is used to Lock  Channel
@@ -139,8 +151,10 @@ class Moderation(commands.Cog):
             await ctx.reply(f"{channel.mention} is **already public** :exclamation:")
 
     @commands.command(aliases=["m"])
-    @commands.has_permissions(manage_roles=True, manage_messages=True)
-    async def mute(self, ctx, member: discord.Member = None, *, reason="no reason provided "):
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_roles=True,manage_messages = True)
+    @commands.bot_has_guild_permissions(manage_roles=True)
+    async def mute(self, ctx, member: discord.Member, *, reason="no reason provided "):
         """
         This is a mute command which mutes the User
         """
@@ -167,8 +181,10 @@ class Moderation(commands.Cog):
         await channel.send(embed=embed)
 
     @commands.command(aliases=["um"])
-    @commands.has_permissions(manage_roles=True, manage_messages=True)
-    async def unmute(self, ctx, member: discord.Member = None, *, reason="No reason provided"):
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_roles=True,manage_messages = True)
+    @commands.bot_has_guild_permissions(manage_roles=True)
+    async def unmute(self, ctx, member: discord.Member, *, reason="No reason provided"):
         """
         this command unmutes a member
         """
@@ -188,8 +204,9 @@ class Moderation(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @commands.has_guild_permissions(ban_members=True)
-    async def kick(self, ctx, member: discord.Member, *, reason=None):
+    @commands.has_guild_permissions(kick_members=True)
+    @commands.bot_has_guild_permissions(kick_members=True)
+    async def kick(self, ctx, member: discord.Member, *, reason="No reason provided"):
         """
         this command Kicks a member
         """
@@ -210,8 +227,10 @@ class Moderation(commands.Cog):
         await ctx.send(f"**{member.name} Has Been Kicked!**")
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_guild_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member, *, reason=None):
+    @commands.bot_has_guild_permissions(ban_members=True)
+    async def ban(self, ctx, member: discord.Member, *, reason="No reason provided"):
         """
         A command which bans a given user
         """
@@ -235,8 +254,10 @@ class Moderation(commands.Cog):
         await ctx.send(f"**{member.name}** Has Been Banned!")
 
     @commands.command(name='unban', aliases=['ub'], description="Unbans a given user from the server")
+    @commands.guild_only()
     @commands.check_any(commands.is_owner(), commands.has_permissions(ban_members=True))
-    async def unban(self, ctx, member: discord.User = None, *, reason=None):
+    @commands.bot_has_guild_permissions(kick_members=True)
+    async def unban(self, ctx, member: discord.User, *, reason="No reason Provided"):
         if reason is None:
             reason = f"Unbanned by {ctx.author}"
         else:

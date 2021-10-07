@@ -1,2 +1,2 @@
-token = "--> Token Here <--"
-db_url = "--> Postgre Db Url <-- "
+token = 'Your Discord Bot token'
+db_url = 'postgresql://user:password@host/database'

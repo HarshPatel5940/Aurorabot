@@ -19,7 +19,7 @@ initial_cogs = [
     "events",
     "invites",
     "automod",
-    # "clan"
+    # "modmail"
 ]
 
 
@@ -28,7 +28,7 @@ def prefix(self, message):
         return commands.when_mentioned_or('>')(self, message)
     else:
         prefix1 = self.prefix[message.guild.id]
-        return commands.when_mentioned_or(prefix1)(self, message)
+        return commands.when_mentioned_or(prefix1, '>')(self, message)
 
 
 async def setup_db():
@@ -57,15 +57,13 @@ class AuroraBot(commands.Bot):
                         activity=discord.Activity(type=discord.ActivityType.listening, name='>help'),
                         case_insensitive=True,
                         strip_after_prefix=True,
-                        owner_ids=[798584468998586388, 448740493468106753],
+                        owner_id=448740493468106753,
                         help_command=HelpCommand())
         self.start_time = time.time()
         self.db = db
-        self.version = 10.9
+        self.version = 11
         self.prefix = {}
-        self.custom_logs = {}
         self.mod_logs = {}
-        self.clan = {}
         self.ready = False
 
     async def on_ready(self):
@@ -82,12 +80,7 @@ class AuroraBot(commands.Bot):
         query = """SELECT * FROM guild"""
         fetch = await self.db.fetch(query)
         self.prefix = {n['server_id']: n['prefix'] for n in fetch}
-        self.custom_logs = {n['server_id']: n['custom_logs'] for n in fetch}
         self.mod_logs = {n['server_id']: n['mod_logs'] for n in fetch}
-        
-        query = """SELECT * FROM clan"""
-        fetch = await self.db.fetch(query)
-        self.clan = {n['member_id']: n['rank'] for n in fetch}
 
         for e in initial_cogs:
             try:
