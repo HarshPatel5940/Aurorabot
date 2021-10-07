@@ -19,7 +19,8 @@ initial_cogs = [
     "events",
     "invites",
     "automod",
-    # "modmail"
+    "clan"  # This Cog is Specially made for FRNz Server, 
+    # while cloning i recoment deleting cpgs/clan.py and delete line 22, 66, 87, 88, 89
 ]
 
 
@@ -57,11 +58,12 @@ class AuroraBot(commands.Bot):
                         activity=discord.Activity(type=discord.ActivityType.listening, name='>help'),
                         case_insensitive=True,
                         strip_after_prefix=True,
-                        owner_id=448740493468106753,
+                        owner_ids=[798584468998586388, 448740493468106753],
                         help_command=HelpCommand())
         self.start_time = time.time()
         self.db = db
         self.version = 11
+        self.clan = {}
         self.prefix = {}
         self.mod_logs = {}
         self.ready = False
@@ -81,6 +83,10 @@ class AuroraBot(commands.Bot):
         fetch = await self.db.fetch(query)
         self.prefix = {n['server_id']: n['prefix'] for n in fetch}
         self.mod_logs = {n['server_id']: n['mod_logs'] for n in fetch}
+
+        query = """SELECT * FROM clan"""
+        fetch = await self.db.fetch(query)
+        self.clan = {n['member_id']: n['rank'] for n in fetch}
 
         for e in initial_cogs:
             try:
