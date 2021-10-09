@@ -21,7 +21,7 @@ class Events(commands.Cog):
             return
         if not message.guild:
             # await message.reply(
-            #     "<a:ALERT:895323744380256286> **For Any Assistance create ticket in <#861641048224038963>** <a:ALERT:895323744380256286>")
+            #     "<a:Red_alert:863017113581256715> **For Any Assistance create ticket in <#861641048224038963>** <a:Red_alert:863017113581256715>")
             # await message.channel.send("If Urgent ping any staff in ticket")
             return
 
@@ -38,6 +38,9 @@ class Events(commands.Cog):
         if isinstance(exception, commands.DisabledCommand):
             await message.channel.send(f"{message.command.qualified_name} is Disabled!!!")
             return
+        if isinstance(exception, commands.errors.MemberNotFound):
+            await message.channel.send(f"No Member Found")
+            return
         if isinstance(exception, commands.MissingPermissions):
             await message.channel.send(f"{message.author.mention} You Lack Permissions !!")
             return
@@ -48,7 +51,7 @@ class Events(commands.Cog):
             await message.reply(f"You are missing {exception.param.name}\nCorrect Usage: ```\n{message.prefix}{message.command.qualified_name} {message.command.signature}\n```")
             return
         await message.reply(f"{exception}")
-        raise exception
+        raise exception # help for error handling
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -63,7 +66,7 @@ class Events(commands.Cog):
                          value=f"{len(guild.members)}")
         embed1.set_thumbnail(url=guild.icon.url)
 
-        channel = self.bot.get_channel(893887526299897937)
+        channel = self.bot.get_channel(896301418955276338)
         await channel.send(embed=embed1)
 
     @commands.Cog.listener()
@@ -77,7 +80,7 @@ class Events(commands.Cog):
                          value=f"{len(guild.members)}")
         embed1.set_thumbnail(url=guild.icon.url)
 
-        channel = self.bot.get_channel(893887526299897937)
+        channel = self.bot.get_channel(896301418955276338)
         await channel.send(embed=embed1)
 
 

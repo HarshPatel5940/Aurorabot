@@ -19,7 +19,7 @@ initial_cogs = [
     "events",
     "invites",
     "automod",
-    "clan"  # This Cog is Specially made for FRNz Server, 
+    "clan"  # This Cog is Specially made for FRNz Server,
     # while cloning i recoment deleting cpgs/clan.py and delete line 22, 66, 87, 88, 89
 ]
 
@@ -54,8 +54,8 @@ async def setup_db():
 class AuroraBot(commands.Bot):
     def __init__(self, db) -> None:
         super().__init__(command_prefix=prefix,
-                        intents=discord.Intents.all(),
-                        activity=discord.Activity(type=discord.ActivityType.listening, name='>help'),
+                         intents=discord.Intents.all(),
+                        activity=discord.Activity(type=discord.ActivityType.listening, name='FRNz PunisherYT  | >help'),
                         case_insensitive=True,
                         strip_after_prefix=True,
                         owner_ids=[798584468998586388, 448740493468106753],

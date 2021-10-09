@@ -47,7 +47,7 @@ class Automod(commands.Cog):
                 except:
                     pass
                 await message.channel.send(
-                    f"{message.author.mention} No invite Links allowed! <a:ALERT:895323744380256286> Repeating this will Cause in a Mute.")
+                    f"{message.author.mention} No invite Links allowed! <a:Red_alert:863017113581256715> Repeating this will Cause in a Mute.")
                 embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
                                         description=f"reason : Sent Invite link", colour=discord.Color.red())
                 log_channel = self.bot.get_channel(
@@ -64,7 +64,7 @@ class Automod(commands.Cog):
                 except:
                     pass
                 await message.channel.send(
-                    f"{message.author.mention} Don't send messages with multiple lines! <a:ALERT:895323744380256286> Repeating this will Cause in a Mute.")
+                    f"{message.author.mention} Don't send messages with multiple lines! <a:Red_alert:863017113581256715> Repeating this will Cause in a Mute.")
                 embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
                                       description=f"reason : Sent Multiple lines in a single message",
                                       colour=discord.Color.red())
@@ -102,7 +102,7 @@ class Automod(commands.Cog):
                     except:
                         pass
                     await message.channel.send(
-                        f"{message.author.mention} No bad words Allowed Here.<a:ALERT:895323744380256286> Repeating this will Cause in a Mute.")
+                        f"{message.author.mention} No bad words Allowed Here.<a:Red_alert:863017113581256715> Repeating this will Cause in a Mute.")
                     embed = discord.Embed(title=f"AutoMod Warned {message.author.name}",
                                             description=f"reason : Used bad word ||{words}||", colour=discord.Color.red())
                     log_channel = self.bot.get_channel(

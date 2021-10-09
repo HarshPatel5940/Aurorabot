@@ -11,9 +11,32 @@ class Moderation(commands.Cog):
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
+    @commands.command(name="setnick", aliases=["nick"])
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_nicknames = True)
+    @commands.bot_has_guild_permissions(manage_nicknames=True)
+    async def nickname(self, ctx, member: discord.Member, *,message):
+        if member.guild_permissions.administrator or member.guild_permissions.ban_members:
+            await ctx.send(f":x: I CANT Moderate AN ADMINISTRATOR/ MOD  {ctx.author.mention} :x:", delete_after=10)
+            return
+        elif member.id >= ctx.guild.owner.id:
+            await ctx.send("can't perform moderation actions on server owner")
+            return
+        elif member.top_role >= ctx.author.top_role:
+            await ctx.send(f"You can only moderate members below your role", delete_after=10)
+            return
+
+        if message == "reset":
+            await member.edit(nick=f"{member.name}")
+            await ctx.message.add_reaction(f"nickname resetted {member.name}")
+            return
+        
+        await member.edit(nick=f"{message}")
+        await ctx.message.add_reaction(f"nickname resetted {member.name}")
+        
     @commands.command(name="clear", aliases=["purge"])
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_roles=True,manage_messages = True)
+    @commands.has_guild_permissions(manage_messages = True)
     @commands.bot_has_guild_permissions(manage_messages=True)
     async def clear(self, ctx, amount=0):
         """
@@ -215,6 +238,9 @@ class Moderation(commands.Cog):
         elif member.guild_permissions.administrator or member.guild_permissions.ban_members:
             await ctx.send(f":x: I CANT Moderate AN ADMINISTRATOR/ MOD  {ctx.author.mention} :x:", delete_after=10)
             return
+        elif member.id >= ctx.guild.owner.id:
+            await ctx.send("can't perform moderation actions on server owner")
+            return
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(f"You can only moderate members below your role", delete_after=10)
             return
@@ -240,6 +266,9 @@ class Moderation(commands.Cog):
         elif member.guild_permissions.administrator or member.guild_permissions.ban_members:
             await ctx.send(f":x: I CANT Moderate AN ADMINISTRATOR/ MOD  {ctx.author.mention} :x:", delete_after=10)
             return
+        elif member.id >= ctx.guild.owner.id:
+            await ctx.send("can't perform moderation actions on server owner")
+            return
         elif member.top_role >= ctx.author.top_role:
             await ctx.send(f"You can only moderate members below your role", delete_after=10)
             return
@@ -258,6 +287,10 @@ class Moderation(commands.Cog):
     @commands.check_any(commands.is_owner(), commands.has_permissions(ban_members=True))
     @commands.bot_has_guild_permissions(kick_members=True)
     async def unban(self, ctx, member: discord.User, *, reason="No reason Provided"):
+        if member.id >= ctx.guild.owner.id:
+            await ctx.send("can't perform moderation actions on server owner")
+            return
+
         if reason is None:
             reason = f"Unbanned by {ctx.author}"
         else:
