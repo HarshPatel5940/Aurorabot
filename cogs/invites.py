@@ -75,7 +75,7 @@ class Invites(commands.Cog):
             await channel.send(x3, embed=embed2)
         await asyncio.sleep(1)
         await channel.send(embed=embed1)
-
+        
     @commands.Cog.listener()
     async def on_member_remove(self, member):
 

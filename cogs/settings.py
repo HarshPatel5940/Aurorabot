@@ -93,7 +93,7 @@ class BotSettings(commands.Cog):
 
         # remove `foo`
         return content.strip('` \n')
-        
+
     @commands.command(hidden=True)
     @commands.is_owner()
     async def eval(self, ctx, *, code: str):

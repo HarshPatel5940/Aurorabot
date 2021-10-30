@@ -1,5 +1,5 @@
 import typing
-
+import asyncio
 import discord
 from discord.ext import commands
 
@@ -8,13 +8,49 @@ class Others(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    class nitroButtons(discord.ui.View):
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+            self.value: str = None
+
+        @discord.ui.button(label="⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Claim⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀", style=discord.ButtonStyle.success)
+        async def nitroButton(self, button: discord.ui.Button, interaction: discord.Interaction):
+
+            await interaction.response.send_message(content="Oh no it was a fake", ephemeral=True)
+            await asyncio.sleep(2)
+            await interaction.edit_original_message(content="Prepare to get rickrolled...(it's a good song anyway)")
+            await asyncio.sleep(2)
+            await interaction.edit_original_message(content="https://i.imgur.com/NQinKJB.gif")
+
+            button.disabled = True
+            button.style = discord.ButtonStyle.secondary
+            button.label = "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Claimed⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+
+            embed = discord.Embed(title="You received a gift, but...",
+                                  description="The gift link has either expired or has been\nrevoked.", color=3092790)
+            embed.set_thumbnail(url="https://i.imgur.com/w9aiD6F.png")
+
+            await interaction.message.edit(view=self, embed=embed)
+
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
+    @commands.command(brief="based on pog bot's nitro command")
+    async def nitro(self, ctx):
+        """
+        Fun Nitro Command
+        """
+        embed = discord.Embed(title="You've been gifted a subscription!",
+                              description="You've been gifted Nitro for **1 month!**\nExpires in **24 hours**", color=3092790)
+        embed.set_thumbnail(url="https://i.imgur.com/w9aiD6F.png")
+
+        view = self.nitroButtons(timeout=180.0)
+        await ctx.send(embed=embed, view=view)
+
     @commands.command()
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_roles=True, manage_messages=True)
+    @commands.has_guild_permissions(manage_messages=True)
     @commands.bot_has_guild_permissions(manage_messages=True)
     async def echo(self, ctx, channel: typing.Optional[discord.TextChannel] = None, *, message):
         """
@@ -31,7 +67,6 @@ class Others(commands.Cog):
     @commands.command(aliases=["emb"])
     @commands.guild_only()
     @commands.has_guild_permissions(manage_roles=True, manage_messages=True)
-    @commands.bot_has_guild_permissions(manage_messages=True)
     async def embed(self, ctx, channel: typing.Optional[discord.TextChannel] = None, *, message):
         """
         This Command is used to send a Embed Through Bot in a channel
@@ -43,8 +78,7 @@ class Others(commands.Cog):
 
     @commands.command(name="editemb")
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_roles=True, manage_messages=True)
-    @commands.bot_has_guild_permissions(manage_messages=True)
+    @commands.has_guild_permissions(manage_messages=True)
     async def edit_embed(self, ctx, channel: discord.TextChannel, id_: int, *, message):
         """
         This Command is used to Edit Exsisting Embed
@@ -62,8 +96,7 @@ class Others(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_roles=True, manage_messages=True)
-    @commands.bot_has_guild_permissions(manage_messages=True)
+    @commands.has_guild_permissions(manage_messages=True)
     async def dm(self, ctx, user: discord.Member, *, message):
         """
         This Command is used to send a Message Through Bot in a DM
@@ -77,8 +110,7 @@ class Others(commands.Cog):
 
     @commands.command(aliases=["dmemb"])
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_roles=True, manage_messages=True)
-    @commands.bot_has_guild_permissions(manage_messages=True)
+    @commands.has_guild_permissions(manage_messages=True)
     async def dm_embed(self, ctx, user: discord.Member, *, message):
         """
         This Command is used to send a Embed Through Bot in a channel
