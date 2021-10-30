@@ -22,6 +22,8 @@
 <img alt="GitHub License" src="https://img.shields.io/github/license/HarshPatel5940/Aurorabot?style=plastic&label=License">
 </a>
 
+## The Work on the Bot is Now Continued in a other private repository.  
+
 ## Bot Info
 1) Bot Prefix: > `customisable`
 2) Bot Version: 11
@@ -29,35 +31,6 @@
 4) [Discord.Py](https://github.com/rapptz/discord.py) Version: 2.0.0
 5) Customised Bot made for [FRNz Official Server]( https://discord.gg/kbb3tG3BPz)
 
-
-
-## How to Host the bot
-### You should have:
-   - [python]()
-   - [git]()
-   - bot token (Make a discord application with bot and **Copy the token**)
-   - postgre sql link 
-  
-### Downloading & Hosting the Bot
-- **Download the [latest release](https://github.com/HarshPatel5940/Aurorabot/releases)**
-- Then head over to the **secrets.py** file
-   ```
-   token = "Your Bot Token Here"
-   db_url = "your Db Url Here"
-   ```
-- You Need to create one table in postgree data base. (create using below cmd)
-   ```
-   Pls Wait for an updated readme
-   ```
-- install the requirements by going to **command prompt** and do the below command
-   ```
-   1) cd <folder directory
-   2) pip install requirements.txt
-   ```
-- now run the bot by the below command
-   ```
-   python main.py
-   ```
 
 # Bot Features
 ### invite Tracking system

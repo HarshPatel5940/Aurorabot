@@ -31,7 +31,6 @@ class Invites(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         inviter = await self.tracker.fetch_inviter(member)
-        general = self.bot.get_channel(799974968921292812)
         channel = self.bot.get_channel(799978267293646868)
         guild = self.bot.get_guild(799974967504535572)
         desc = f"**Member :** {member.mention}"
@@ -73,10 +72,10 @@ class Invites(commands.Cog):
         try:
             await member.send(x1, embed=embed2)
         except:
-            await general.send(x3, embed=embed2)
+            await channel.send(x3, embed=embed2)
         await asyncio.sleep(1)
         await channel.send(embed=embed1)
-
+        
     @commands.Cog.listener()
     async def on_member_remove(self, member):
 
